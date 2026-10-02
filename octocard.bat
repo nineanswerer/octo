@@ -14,4 +14,3 @@ set "MAKEPAD_HIDE_WINDOWS="
 "%OCTO_CARD_HOST%" --bundle "%~dp0bundle" --app-data "%~dp0.local-state" --allow-unsigned
 set "octo_launch_exit=%ERRORLEVEL%"
 endlocal & exit /b %octo_launch_exit%
-

@@ -1,16 +1,9 @@
-# Submission Notes
+# Submission notes — 2026-10-03
 
-## 队伍
-- 队伍名：南下
-- issue #5 reference
+Team: 南下. Entrant: nineanswerer. Entrant confirmed personal registration and sole membership.
 
-## What's Pending (待人工)
-1. `hub keygen` + `hub sign-manifest` (需要 publisher key — 人手动)
-2. 提交 issue 到 OctoSense-App-Hub (需要 GitHub token — 人手动)
+Current delivery: Windows local-rule editable email draft flow, confirmed persistence/readback, restart recovery, failure feedback, privacy policy and Apache-2.0 license. See README and validation/mail-mvp.json for tested limits.
 
-## What's Done (自动化)
-1. ✅ bundle/ 通过 hub check
-2. ✅ 5 张真实 PNG 截图
-3. ✅ build/review.json (7 个问题全部回答)
-4. ✅ README.md / README.zh-CN.md / BRIEF.md
-5. ✅ tools/octo build (card-host + hub)
+Still pending: current official host/deadline recheck, two current screenshots, 2–3 minute truthful demonstration, final material review and submission through the currently available official channel. No published issue or acceptance is established by this file. Signing requirements and submission channel must be verified against current official instructions before submission.
+
+Runtime online interpretation and authorized signal observation remain subsequent product work; development-agent MiniMax usage is not runtime AI.
