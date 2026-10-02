@@ -4,9 +4,9 @@
   ],
   "id": "no-reminder-agent",
   "integrity": {
-    "bundle_blake3": "8f44f99063f61ab26cb5a4ae2bcd567941c060f57de9334e555a49576b4b69c3"
+    "bundle_blake3": "998d469483e702268679545204233693b6feacbbdff76e8e84497ab769be8ebe"
   },
   "name": "无提醒 Agent",
   "schema": 1,
-  "version": "0.1.0"
+  "version": "0.2.0"
 }

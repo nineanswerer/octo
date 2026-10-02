@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "subtitle": "不催不推，只帮启动",
-  "description": "为什么不自己设置提醒？因为拖延的人最不会主动设置。Agent 从你的'半完成信号'里自己发现可能要做的事，在你最容易做的时候轻轻浮现卡片——不催、不推、不打扰。",
+  "description": "本地规则识别用户提供的未完成邮件文本，保留原文、生成可编辑草稿，确认保存后读回核验。不读取或发送邮件，不调用在线模型。",
   "category": "productivity",
   "keywords": [
     "拖延症",
@@ -20,16 +20,14 @@
     "screenshots/01-main.png"
   ],
   "platforms": [
-    "windows",
-    "linux",
-    "macos"
+    "windows"
   ],
-  "release_notes": "Initial release. 6 demo half-finished signals; one-click discovery simulation; agentic loop visible end-to-end. Demo video: see README.md.",
+  "release_notes": "Local-rule draft workflow with editable input, confirmed saving and readback verification. No online model or email sending.",
   "age_rating": "all",
   "publisher": {
     "name": "Team 南下",
-    "support": "https://github.com/gosimfoundation/hackathon-agenticapp26/issues/5",
-    "privacy_policy_url": "https://github.com/OctoSense-org/OctoScript-App-Design-Flow/blob/main/PUBLISHING.md"
+    "support": "https://github.com/nineanswerer/octo/issues",
+    "privacy_policy_url": "https://github.com/nineanswerer/octo/blob/master/PRIVACY.md"
   },
   "license": "Apache-2.0"
 }

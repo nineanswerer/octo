@@ -1,71 +1,19 @@
-# 无提醒 Agent (No-Reminder Agent)
+# No-Reminder Agent 0.2.0
 
-> **The Intent Is the App** — OctoSense entry for GOSIM Agentic App Hackathon 2026
+Windows OctoSense local draft helper. Paste an unfinished email, organize, edit and confirm saving. Local keyword rules preserve the original text and add a neutral closing. Saved files are read back and restored on restart.
 
-[English](#) | [简体中文](README.zh-CN.md)
+Current runtime does not monitor email, use online models, send messages, observe in the background or learn timing. MiniMax development agents are separate from runtime behavior.
 
-## What's this
+## Run
 
-An anti-reminder app. Agent watches your **half-finished signals** (draft emails, untouched courses, broken promises) and surfaces "next 30 seconds" cards — **without nagging**.
+Set OCTO_CARD_HOST to an absolute Windows card-host.exe path, then run octocard.bat. Data defaults to .local-state. No host binary is included. Only Windows was tested.
 
-The anti-common-sense insight: **people who procrastinate the most will never set their own reminders.** Every reminder app assumes user initiative — this one doesn't.
+Check with: hub.exe check bundle --allow-unsigned. The development bundle is unsigned; signature-requiring hosts refuse it. Local admission does not establish official installation or competition acceptance.
 
+## Evidence
 
-## Demo Video
+Twelve native UI/file checks passed: empty start/input, unrelated text, generation, changed-source protection, save/readback, repeated save, restart, cancellation, clearing, write failure and inconsistent restore. [Results](validation/mail-mvp.json), [screenshot](bundle/screenshots/01-main.png).
 
-Watch the 60-second demo: [`demo.mp4`](./demo.mp4) (<1 MB, MP4 H.264 + AAC narration).
+Tested host SHA-256: BF277982100470A5C2AE0C9E5AEA556802ED7A61ADD64432D606BA2A79DAB1EF. This identifies a local binary, not a certified competition baseline. Demo video and final submission materials remain unfinished.
 
-## The Agentic loop
-
-```
-Observe  half-finished signals across mail/calendar/files/chat
-Infer    what you probably mean to do
-Surface  a 30-second "next step" card at the right moment
-Confirm you keep full control — every action needs your tap
-Learn    your procrastination patterns over time
-```
-
-# Run
-export OCTO_HUB="$(pwd)/target/release/hub.exe"
-export OCTO_CARD_HOST="$(pwd)/target/release/card-host.exe"
-cd ../OctoScript-App-Design-Flow
-python tools/octo run ../../apps/no-reminder-agent/bundle --port 8141 --hidden --detach
-
-# Drive via HTTP
-curl 127.0.0.1:8141/snap
-
-# Quit
-curl 127.0.0.1:8141/quit
-
-# Check (gate)
-python tools/octo check ../../apps/no-reminder-agent/bundle --allow-unsigned
-```
-
-### One-click (Windows desktop)
-
-Double-click `octocard.bat` in `C:\Users\steam\Desktop\octo\` — auto-starts the app at port 8141.
-
-## Capabilities
-
-- `storage` (only) — local persistence in `<app-data>/no-reminder-agent/threads.json`
-
-## Files
-
-- `bundle/main.splash` — the program (Splash / Octoscript DSL, ~13K bytes)
-- `bundle/manifest.json` — schema-1 manifest
-- `bundle/listing.json` — store listing
-- `bundle/screenshots/01-05.png` — 5 real PNG captures (main/detail/after-complete/after-signal/empty-state)
-- `demo.mp4` — 60-second demo video
-- `BRIEF.md` — design rationale
-- `DEMO-SCRIPT.md` — demo script notes
-
-## What we are NOT doing
-
-- ❌ No real email/calendar API integration (mock data for demo)
-- ❌ No background tasks (UI-triggered simulation)
-- ❌ No nag / push notifications
-- ❌ No "I'll do it for you" — only help you **start**
-
-## License
-
-Apache-2.0
+[Privacy](PRIVACY.md), [plan](DEVELOPMENT_PLAN.md), [Apache-2.0 license](LICENSE). Sole entrant nineanswerer; registration confirmed by entrant.
