@@ -198,7 +198,7 @@ SolidView{width: Fill height: Fill flow: Down padding: 16 spacing: 12 draw_bg.co
         Label{text: "不催不推，只帮启动" draw_text.color: secondary draw_text.text_style.font_size: 13}
     }
 
-    // Stats — use SolidView.on_render (View family supports it)
+    // Stats — SolidView with on_render; children built inside the callback
     stats_view := SolidView{width: Fill height: Fit flow: Down spacing: 4 padding: 12 draw_bg.color: bg_card draw_bg.border_radius: 8 on_render: || {
         stats_label.set_text("Agent 发现 " + threads.len() + " 个半完成信号")
         stats_sub.set_text("已帮你完成 " + learned_pattern.completed_count + " 件 · 暂缓 " + learned_pattern.snooze_count + " 件")
@@ -213,9 +213,6 @@ SolidView{width: Fill height: Fill flow: Down padding: 16 spacing: 12 draw_bg.co
         Label{text: "已帮你完成 " + learned_pattern.completed_count + " 件 · 暂缓 " + learned_pattern.snooze_count + " 件" draw_text.color: secondary draw_text.text_style.font_size: 12}
         Label{text: "" draw_text.color: #xff9500 draw_text.text_style.font_size: 11}
     }
-        stats_label := Label{text: "Agent 发现 0 个半完成信号" draw_text.color: ink draw_text.text_style.font_size: 13}
-        stats_sub := Label{text: "已帮你完成 0 件 · 暂缓 0 件" draw_text.color: secondary draw_text.text_style.font_size: 12}
-        stats_insight := Label{text: "" draw_text.color: #xff9500 draw_text.text_style.font_size: 11}
 
     // 列表
     list := ScrollYView{width: Fill height: Fill flow: Down spacing: 8 on_render: || {
