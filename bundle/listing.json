@@ -17,7 +17,8 @@
   ],
   "icon": "assets/icon.svg",
   "screenshots": [
-    "screenshots/01-main.png"
+    "screenshots/01-main.png",
+    "screenshots/02-save-failure.png"
   ],
   "platforms": [
     "windows"
