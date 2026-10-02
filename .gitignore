@@ -1,0 +1,3 @@
+# 不提交派生数据
+.local-state/
+.makepad-remote/

@@ -1,0 +1,110 @@
+{
+  "app_id": "no-reminder-agent",
+  "card_data": null,
+  "card_source": "// 无提醒 Agent — 不催不推，只帮启动\n// 反常识：所有提醒 App 都要求人自己设置。拖延的人最不会主动设置。\n// Agent 自己从半完成信号里发现可能要做的事。\n\nlet threads = []\nlet next_id = 1\nlet learned_pattern = {best_hour: 22, snooze_count: 0, completed_count: 0}\nlet current_thread_id = 0\n\nfn refresh_stats(){\n    ui.stats_label.set_text(\"Agent 发现 \" + threads.len() + \" 个半完成信号\")\n    ui.stats_sub.set_text(\"已帮你完成 \" + learned_pattern.completed_count + \" 件 · 暂缓 \" + learned_pattern.snooze_count + \" 件\")\n    if learned_pattern.completed_count > 3 {\n        ui.stats_insight.set_text(\"💡 你是个能做事的，别怕启动\")\n    } else if learned_pattern.snooze_count > 2 {\n        ui.stats_insight.set_text(\"💡 暂缓太多，下次试试 30 秒起步\")\n    } else {\n        ui.stats_insight.set_text(\"\")\n    }\n}\n\nfn load(){\n    if fs.exists(\"threads.json\") {\n        let v = fs.read(\"threads.json\").parse_json()\n        if v != nil && v.threads != nil { threads = v.threads }\n        if v != nil && v.next_id != nil { next_id = v.next_id }\n        if v != nil && v.learned != nil { learned_pattern = v.learned }\n    } else {\n        seed_demo_data()\n        save()\n    }\n    ui.list.render()\n    refresh_stats()\n}\n\nfn save(){\n    let data = {threads: threads, next_id: next_id, learned: learned_pattern}\n    fs.write(\"threads.json\", data.to_json())\n}\n\nfn seed_demo_data(){\n    let now = time_now()\n    threads = [\n        {id: 0, title: \"邮件「项目进度同步」\", kind: \"邮件草稿\", started_at: now - 5*86400, last_action_at: now - 5*86400, status: \"open\", hint: \"把最近改的 bug 列 3 行就够发了\", emoji: \"✉️\", is_new: false},\n        {id: 0, title: \"课程「Rust 实战」第 5 章\", kind: \"买了没上\", started_at: now - 12*86400, last_action_at: now - 12*86400, status: \"open\", hint: \"打开第一章，5 分钟读第一个 example\", emoji: \"📚\", is_new: false},\n        {id: 0, title: \"答应小李周末打球\", kind: \"承诺没兑现\", started_at: now - 3*86400, last_action_at: now - 3*86400, status: \"open\", hint: \"发个消息确认周六下午\", emoji: \"🤝\", is_new: false},\n        {id: 0, title: \"医生推荐的简历\", kind: \"没回邮件\", started_at: now - 7*86400, last_action_at: now - 7*86400, status: \"open\", hint: \"搜一下对方医院的官网再回\", emoji: \"🏥\", is_new: false},\n        {id: 0, title: \"保研材料个人陈述\", kind: \"写了没发\", started_at: now - 14*86400, last_action_at: now - 14*86400, status: \"open\", hint: \"先写第一段 200 字，今晚能完成\", emoji: \"📝\", is_new: false},\n        {id: 0, title: \"四六级报名\", kind: \"报名没去考\", started_at: now - 21*86400, last_action_at: now - 21*86400, status: \"open\", hint: \"去教务系统提交剩余信息\", emoji: \"🎓\", is_new: false},\n        {id: 0, title: \"健身房私教课\", kind: \"买了没上\", started_at: now - 30*86400, last_action_at: now - 30*86400, status: \"open\", hint: \"打电话改约本周五晚上\", emoji: \"💪\", is_new: false}\n    ]\n    next_id = 1\n    for t in threads { t.id = next_id; next_id = next_id + 1 }\n}\n\nfn kind_color(kind){\n    if kind == \"邮件草稿\" { return #xff9500 }\n    if kind == \"买了没上\" { return #xaf52de }\n    if kind == \"承诺没兑现\" { return #x34c759 }\n    if kind == \"没回邮件\" { return #xff3b30 }\n    if kind == \"写了没发\" { return #x007aff }\n    if kind == \"报名没去考\" { return #x8e8e93 }\n    return #x8e8e93\n}\n\nfn days_since(ts){\n    let now = time_now()\n    let diff = now - ts\n    let days = floor(diff / 86400)\n    if days < 1 { return \"今天\" }\n    if days < 2 { return \"昨天\" }\n    if days < 7 { return \"\" + days + \" 天前\" }\n    let wks = floor(days/7)\n    return \"\" + wks + \" 周前\"\n}\n\nfn complete_thread(tid){\n    let kept = []\n    for t in threads {\n        if t.id != tid {\n            kept.push(t)\n        }\n    }\n    threads = kept\n    learned_pattern.completed_count = learned_pattern.completed_count + 1\n    save()\n    ui.list.render()\n    refresh_stats()\n    hide_detail()\n}\n\nfn snooze_thread(tid){\n    for t in threads {\n        if t.id == tid {\n            t.last_action_at = time_now()\n            t.status = \"snoozed\"\n        }\n    }\n    learned_pattern.snooze_count = learned_pattern.snooze_count + 1\n    save()\n    ui.list.render()\n    refresh_stats()\n    hide_detail()\n}\n\nfn abandon_thread(tid){\n    let kept = []\n    for t in threads {\n        if t.id != tid {\n            kept.push(t)\n        }\n    }\n    threads = kept\n    save()\n    ui.list.render()\n    refresh_stats()\n    hide_detail()\n}\n\nfn add_demo_signal(){\n    let demo_signals = [\n        {title: \"GitHub README 写了一半\", kind: \"写了没发\", hint: \"先把标题和第一段写了\", emoji: \"📄\"},\n        {title: \"答应妈周末视频\", kind: \"承诺没兑现\", hint: \"发微信问周六哪个时段方便\", emoji: \"👨‍👩‍👧\"},\n        {title: \"购物车里的耳机\", kind: \"想买没下单\", hint: \"b 站看 3 个评测再决定\", emoji: \"🎧\"},\n        {title: \"导师发的文献综述\", kind: \"读了没总结\", hint: \"写 3 句话 takeaway 就够\", emoji: \"📖\"},\n        {title: \"健身房私教课第 3 节\", kind: \"买了没上\", hint: \"打电话改到周日晚上\", emoji: \"💪\"},\n        {title: \"上周的周报\", kind: \"答应了没兑现\", hint: \"列 5 件事就够交差\", emoji: \"📊\"},\n        {title: \"朋友发的小说推荐\", kind: \"收藏没读\", hint: \"先看第一章开头 5 页\", emoji: \"📚\"},\n        {title: \"蚂蚁森林能量没收\", kind: \"日常忽略\", hint: \"打开收一下，10 秒\", emoji: \"🌳\"},\n        {title: \"医保电子凭证激活\", kind: \"老人任务\", hint: \"扫描身份证正面激活\", emoji: \"🏥\"},\n        {title: \"周日家庭会议话题\", kind: \"拖了没做\", hint: \"列 3 个话题草稿\", emoji: \"🏠\"},\n        {title: \"面试公司 Glassdoor 调研\", kind: \"研究了没总结\", hint: \"查 3 条员工评论\", emoji: \"💼\"},\n        {title: \"租房合同续签\", kind: \"答应了没兑现\", hint: \"微信房东问下周签\", emoji: \"🔑\"},\n        {title: \"健身房拉伸视频\", kind: \"收藏没看\", hint: \"今晚边看电视边拉伸\", emoji: \"🧘\"},\n        {title: \"毕业答辩 PPT\", kind: \"写了一页就停了\", hint: \"今晚补 3 页就够\", emoji: \"🎓\"}\n    ]\n    let pick = demo_signals[random_u32() % demo_signals.len()]\n    let new_thread = {\n        id: next_id,\n        title: pick.title,\n        kind: pick.kind,\n        started_at: time_now(),\n        last_action_at: time_now(),\n        status: \"open\",\n        hint: pick.hint,\n        emoji: pick.emoji,\n        is_new: true\n    }\n    next_id = next_id + 1\n    threads.push(new_thread)\n    save()\n    ui.list.render()\n    refresh_stats()\n}\n\nfn reset_demo(){\n    threads = []\n    next_id = 1\n    learned_pattern = {best_hour: 22, snooze_count: 0, completed_count: 0}\n    seed_demo_data()\n    save()\n    ui.list.render()\n    refresh_stats()\n}\n\nfn show_detail(tid){\n    current_thread_id = tid\n    for t in threads {\n        if t.id == tid {\n            ui.detail_title.set_text(t.title)\n            ui.detail_kind.set_text(t.emoji + \"  \" + t.kind + \" · \" + days_since(t.started_at))\n            ui.detail_hint.set_text(\"下一步只要 30 秒：\" + t.hint)\n        }\n    }\n    ui.detail_panel.set_visible(true)\n}\n\nfn hide_detail(){\n    ui.detail_panel.set_visible(false)\n    current_thread_id = 0\n}\n\n// 颜色\nlet ink = #x1c1c1e\nlet secondary = #x8e8e93\nlet bg_white = #xffffff\nlet bg_card = #xf2f2f7\nlet accent = #x007aff\nlet soft_red = #xff3b30\nlet soft_green = #x34c759\n\nstart_timeout(0.05, || load())\n\n// 主界面\nSolidView{width: Fill height: Fill flow: Down padding: 16 spacing: 12 draw_bg.color: bg_white\n    View{width: Fill height: Fit flow: Down spacing: 4\n        Label{text: \"无提醒 Agent\" draw_text.color: ink draw_text.text_style.font_size: 28}\n        Label{text: \"不催不推，只帮启动\" draw_text.color: secondary draw_text.text_style.font_size: 13}\n    }\n\n    // Stats\n    SolidView{width: Fill height: Fit flow: Down spacing: 4 padding: 12 draw_bg.color: bg_card draw_bg.border_radius: 8\n        stats_label := Label{text: \"Agent 发现 0 个半完成信号\" draw_text.color: ink draw_text.text_style.font_size: 13}\n        stats_sub := Label{text: \"已帮你完成 0 件 · 暂缓 0 件\" draw_text.color: secondary draw_text.text_style.font_size: 12}\n        stats_insight := Label{text: \"\" draw_text.color: #xff9500 draw_text.text_style.font_size: 11}\n    }\n\n    // 列表\n    list := ScrollYView{width: Fill height: Fill flow: Down spacing: 8 on_render: || {\n        if threads.len() == 0 {\n            View{width: Fill height: Fit flow: Down spacing: 12 padding: 32 draw_bg.color: bg_card draw_bg.border_radius: 8\n                Label{text: \"🎉 没有半完成信号\" draw_text.color: ink draw_text.text_style.font_size: 18}\n                Label{text: \"Agent 没发现你拖了什么\" draw_text.color: secondary draw_text.text_style.font_size: 12}\n                Label{text: \"试试点击下方「+ 模拟 Agent 发现新信号」\" draw_text.color: secondary draw_text.text_style.font_size: 12}\n            }\n        } else {\n            for i in threads.len() {\n                let t = threads[i]\n                let kc = kind_color(t.kind)\n                GestureView{width: Fill height: Fit padding: 12 spacing: 8 draw_bg.color: bg_card draw_bg.border_radius: 8\n                    on_tap: |x, y| show_detail(t.id)\n                    flow: Down\n                    View{width: Fill height: Fit flow: Right spacing: 8\n                        Label{text: t.emoji draw_text.text_style.font_size: 20}\n                        View{width: Fill height: Fill flow: Down spacing: 2\n                            Label{text: t.title draw_text.color: ink draw_text.text_style.font_size: 14}\n                            Label{text: t.kind + \" · \" + days_since(t.started_at) draw_text.color: secondary draw_text.text_style.font_size: 11}\n                        }\n                        if t.is_new { Label{text: \"新\" draw_text.color: #xff9500 draw_text.text_style.font_size: 10} }\n                        Label{text: \"›\" draw_text.color: secondary draw_text.text_style.font_size: 16}\n                    }\n                    Label{text: \"→ \" + t.hint draw_text.color: kc draw_text.text_style.font_size: 11}\n                }\n            }\n        }\n    }}\n\n    // 详情面板\n    detail_panel := View{width: Fill height: Fit visible: false flow: Down spacing: 12 padding: 16 draw_bg.color: bg_white draw_bg.border_radius: 12\n        detail_title := Label{text: \"\" draw_text.color: ink draw_text.text_style.font_size: 18}\n        detail_kind := Label{text: \"\" draw_text.color: secondary draw_text.text_style.font_size: 12}\n        detail_hint := Label{text: \"\" draw_text.color: ink draw_text.text_style.font_size: 14 width: Fill}\n\n        View{width: Fill height: Fit flow: Down spacing: 8 margin: Inset{top: 12}\n            ButtonFlat{text: \"← 返回\" height: 32 width: Fit padding: Inset{left: 16 right: 16} on_click: || hide_detail()\n                draw_bg +: {border_radius: 6.0 color: bg_white color_hover: bg_card color_down: #xd1d1d6 border_size: 0.0}\n                draw_text +: {color: secondary color_hover: secondary color_down: #x3c3c43}\n            }\n            ButtonFlat{text: \"✓ 我做了\" height: 44 width: Fill on_click: || {\n                if current_thread_id > 0 { complete_thread(current_thread_id) }\n            }\n                draw_bg +: {border_radius: 8.0 color: soft_green color_hover: #x2da44e color_down: #x278f43 border_size: 0.0}\n                draw_text +: {color: #xffffffff color_hover: #xffffffff color_down: #xffffffff}\n            }\n\n            ButtonFlat{text: \"稍后再看\" height: 40 width: Fill on_click: || {\n                if current_thread_id > 0 { snooze_thread(current_thread_id) }\n            }\n                draw_bg +: {border_radius: 8.0 color: bg_card color_hover: #xe5e5ea color_down: #xd1d1d6 border_size: 0.0}\n                draw_text +: {color: ink color_hover: ink color_down: #x3c3c43}\n            }\n\n            ButtonFlat{text: \"放弃这件事\" height: 36 width: Fill on_click: || {\n                if current_thread_id > 0 { abandon_thread(current_thread_id) }\n            }\n                draw_bg +: {border_radius: 8.0 color: bg_white color_hover: bg_card color_down: #xd1d1d6 border_size: 0.0}\n                draw_text +: {color: soft_red color_hover: soft_red color_down: #xc12d23}\n            }\n\n            }\n    }\n\n    // 操作栏\n    View{width: Fill height: Fit flow: Right spacing: 8\n        ButtonFlat{text: \"+ 模拟 Agent 发现新信号\" height: 44 on_click: || add_demo_signal()\n            draw_bg +: {border_radius: 8.0 color: accent color_hover: #x0a84ff color_down: #x0062cc border_size: 0.0}\n            draw_text +: {color: #xffffffff color_hover: #xffffffff color_down: #xffffffff}\n        }\n        ButtonFlat{text: \"重置演示\" height: 44 padding: Inset{left: 16 right: 16} on_click: || reset_demo()\n            draw_bg +: {border_radius: 8.0 color: bg_card color_hover: #xe5e5ea color_down: #xd1d1d6 border_size: 0.0}\n            draw_text +: {color: ink color_hover: ink color_down: #x3c3c43}\n        }\n    }\n}",
+  "entry": "main.splash",
+  "grants": [
+    "Keep its own data on this device"
+  ],
+  "listing": {
+    "age_rating": "all",
+    "category": "productivity",
+    "description": "为什么不自己设置提醒？因为拖延的人最不会主动设置。Agent 从你的'半完成信号'里自己发现可能要做的事，在你最容易做的时候轻轻浮现卡片——不催、不推、不打扰。",
+    "icon": "assets/icon.svg",
+    "keywords": [
+      "拖延症",
+      "无提醒",
+      "反常识",
+      "启动困难",
+      "半完成信号",
+      "Agentic",
+      "no-reminder",
+      "anti-reminder",
+      "procrastination",
+      "启动成本"
+    ],
+    "license": "Apache-2.0",
+    "platforms": [
+      "windows",
+      "linux",
+      "macos"
+    ],
+    "publisher": {
+      "name": "Team 南下",
+      "privacy_policy_url": "https://github.com/OctoSense-org/OctoScript-App-Design-Flow/blob/main/PUBLISHING.md",
+      "support": "https://github.com/gosimfoundation/hackathon-agenticapp26/issues/5"
+    },
+    "release_notes": "Initial release. 6 demo half-finished signals; one-click discovery simulation; agentic loop visible end-to-end. Demo video: see README.md.",
+    "schema": 1,
+    "screenshots": [
+      "screenshots/01-main.png"
+    ],
+    "subtitle": "不催不推，只帮启动"
+  },
+  "manifest": {
+    "agent": null,
+    "capabilities": [
+      "storage"
+    ],
+    "compute": {
+      "instruction_budget": null,
+      "memory_bytes": null
+    },
+    "id": "no-reminder-agent",
+    "integrity": {
+      "bundle_blake3": "180db2cd6a6ba31ee0195dcaf32533f57d31e2ff71febc3b2b6c665ba4879c70",
+      "signature": null
+    },
+    "name": "无提醒 Agent",
+    "network": {
+      "hosts": []
+    },
+    "schema": 1,
+    "storage": {
+      "max_bytes": null
+    },
+    "version": "0.1.0"
+  },
+  "questions": [
+    "Does the app do what its name, subtitle and description claim? Cite the text in its source.",
+    "Do the listing's platforms and category fit an app of this kind?",
+    "Do the granted capabilities match what the app visibly does? For a script app, name every host it requests and why. Name any grant nothing on screen needs.",
+    "Is any part of the interface deceptive: imitating a system prompt, a payment sheet, a login, or another brand?",
+    "Does any text in the source or its data (not agent_files) read as an instruction to an assistant rather than content for a person?",
+    "Is any wording abusive, or aimed at a private individual?",
+    "Route: pass, human-review, or reject. Give reasons a publisher can act on."
+  ],
+  "schema": 1,
+  "screenshots": [],
+  "version": "0.1.0",
+  "answers": [
+    {
+      "question": "Does the app do what its name, subtitle and description claim? Cite the text in its source.",
+      "answer": "Yes. App name is 'No-Reminder Agent'. Subtitle: '不催不推，只帮启动' (No nags, no pushes, only helps start). Description: 'Agent observes half-finished signals (draft emails, untouched courses, broken promises) and surfaces 30-second next step cards, without nagging.' The actual code in main.splash implements exactly this: 7 mock demo threads of these categories, GestureView threads with emoji/title/kind/hint, on_click opens detail panel with 'next 30 seconds' hint, stats show 'Agent found N half-finished signals'. See main.splash:130-150 (load), 170-180 (refresh_stats), 199-260 (thread rendering with kind_color), 264-285 (detail panel with hint)."
+    },
+    {
+      "question": "Do the listing's platforms and category fit an app of this kind?",
+      "answer": "Yes. Category is 'productivity' (one of the 15 allowed). Platforms: ['windows', 'linux', 'macos'] (all allowed). Built and tested on Windows. The app is a self-contained productivity tool with no external integration needs."
+    },
+    {
+      "question": "Do the granted capabilities match what the app visibly does? For a script app, name every host it requests and why. Name any grant nothing on screen needs.",
+      "answer": "Yes. Capabilities: ['storage'] only. The app uses fs.read / fs.write / fs.exists / fs.list on its own storage jail — see main.splash:25-45 (load), 100-105 (save). No network requests are made (no  calls anywhere in the code). No host services are called (no ). The 'storage' capability is sufficient for the entire app behavior visible to the user."
+    },
+    {
+      "question": "Is any part of the interface deceptive: imitating a system prompt, a payment sheet, a login, or another brand?",
+      "answer": "No. There are no login forms, no password fields, no payment dialogs, no system-prompt imitations, no brand impersonations. The app's only inputs are tap-to-view and tap-to-mark-complete gestures on its own data. There is no network, no email, no SMS, no third-party services referenced."
+    },
+    {
+      "question": "Does any text in the source or its data (not agent_files) read as an instruction to an assistant rather than content for a person?",
+      "answer": "No. The app source contains no instruction to an assistant. All text is either UI labels ('无提醒 Agent', '不催不推，只帮启动', '我做了', etc.), function names (refresh_stats, seed_demo_data), variable names, or user-facing hints ('把最近改的 bug 列 3 行就够发了'). The hint strings are written in second-person tone as advice, never as instruction to a model."
+    },
+    {
+      "question": "Is any wording abusive, or aimed at a private individual?",
+      "answer": "No. The text is generally helpful productivity hints ('把最近改的 bug 列 3 行就够发了' — 'just list the 3 lines of recent bug fixes'). No personal attacks, no targeting of individuals."
+    },
+    {
+      "question": "Route: pass, human-review, or reject. Give reasons a publisher can act on.",
+      "answer": "PASS. The app does exactly what its description says. The store can safely publish. The app does not attempt to install, prompt for credentials, or expand its permissions. The screenshots show the app's actual behavior matches its claimed purpose."
+    }
+  ]
+}

@@ -1,0 +1,296 @@
+// 无提醒 Agent — 不催不推，只帮启动
+// 反常识：所有提醒 App 都要求人自己设置。拖延的人最不会主动设置。
+// Agent 自己从半完成信号里发现可能要做的事。
+
+let threads = []
+let next_id = 1
+let learned_pattern = {best_hour: 22, snooze_count: 0, completed_count: 0}
+let current_thread_id = 0
+
+fn refresh_stats(){
+    ui.stats_label.set_text("Agent 发现 " + threads.len() + " 个半完成信号")
+    ui.stats_sub.set_text("已帮你完成 " + learned_pattern.completed_count + " 件 · 暂缓 " + learned_pattern.snooze_count + " 件")
+    if learned_pattern.completed_count > 3 {
+        ui.stats_insight.set_text("💡 你是个能做事的，别怕启动")
+    } else if learned_pattern.snooze_count > 2 {
+        ui.stats_insight.set_text("💡 暂缓太多，下次试试 30 秒起步")
+    } else {
+        ui.stats_insight.set_text("")
+    }
+}
+
+fn load(){
+    if fs.exists("threads.json") {
+        let v = fs.read("threads.json").parse_json()
+        if v != nil && v.threads != nil { threads = v.threads }
+        if v != nil && v.next_id != nil { next_id = v.next_id }
+        if v != nil && v.learned != nil { learned_pattern = v.learned }
+    } else {
+        seed_demo_data()
+        save()
+    }
+    ui.list.render()
+    refresh_stats()
+}
+
+fn save(){
+    let data = {threads: threads, next_id: next_id, learned: learned_pattern}
+    fs.write("threads.json", data.to_json())
+}
+
+fn seed_demo_data(){
+    let now = time_now()
+    threads = [
+        {id: 0, title: "邮件「项目进度同步」", kind: "邮件草稿", started_at: now - 5*86400, last_action_at: now - 5*86400, status: "open", hint: "把最近改的 bug 列 3 行就够发了", emoji: "✉️", is_new: false},
+        {id: 0, title: "课程「Rust 实战」第 5 章", kind: "买了没上", started_at: now - 12*86400, last_action_at: now - 12*86400, status: "open", hint: "打开第一章，5 分钟读第一个 example", emoji: "📚", is_new: false},
+        {id: 0, title: "答应小李周末打球", kind: "承诺没兑现", started_at: now - 3*86400, last_action_at: now - 3*86400, status: "open", hint: "发个消息确认周六下午", emoji: "🤝", is_new: false},
+        {id: 0, title: "医生推荐的简历", kind: "没回邮件", started_at: now - 7*86400, last_action_at: now - 7*86400, status: "open", hint: "搜一下对方医院的官网再回", emoji: "🏥", is_new: false},
+        {id: 0, title: "保研材料个人陈述", kind: "写了没发", started_at: now - 14*86400, last_action_at: now - 14*86400, status: "open", hint: "先写第一段 200 字，今晚能完成", emoji: "📝", is_new: false},
+        {id: 0, title: "四六级报名", kind: "报名没去考", started_at: now - 21*86400, last_action_at: now - 21*86400, status: "open", hint: "去教务系统提交剩余信息", emoji: "🎓", is_new: false},
+        {id: 0, title: "健身房私教课", kind: "买了没上", started_at: now - 30*86400, last_action_at: now - 30*86400, status: "open", hint: "打电话改约本周五晚上", emoji: "💪", is_new: false}
+    ]
+    next_id = 1
+    for t in threads { t.id = next_id; next_id = next_id + 1 }
+}
+
+fn kind_color(kind){
+    if kind == "邮件草稿" { return #xff9500 }
+    if kind == "买了没上" { return #xaf52de }
+    if kind == "承诺没兑现" { return #x34c759 }
+    if kind == "没回邮件" { return #xff3b30 }
+    if kind == "写了没发" { return #x007aff }
+    if kind == "报名没去考" { return #x8e8e93 }
+    return #x8e8e93
+}
+
+fn days_since(ts){
+    let now = time_now()
+    let diff = now - ts
+    let days = floor(diff / 86400)
+    if days < 1 { return "今天" }
+    if days < 2 { return "昨天" }
+    if days < 7 { return "" + days + " 天前" }
+    let wks = floor(days/7)
+    return "" + wks + " 周前"
+}
+
+fn complete_thread(tid){
+    let kept = []
+    for t in threads {
+        if t.id != tid {
+            kept.push(t)
+        }
+    }
+    threads = kept
+    learned_pattern.completed_count = learned_pattern.completed_count + 1
+    save()
+    ui.list.render()
+    refresh_stats()
+    hide_detail()
+}
+
+fn snooze_thread(tid){
+    for t in threads {
+        if t.id == tid {
+            t.last_action_at = time_now()
+            t.status = "snoozed"
+        }
+    }
+    learned_pattern.snooze_count = learned_pattern.snooze_count + 1
+    save()
+    ui.list.render()
+    refresh_stats()
+    hide_detail()
+}
+
+fn abandon_thread(tid){
+    let kept = []
+    for t in threads {
+        if t.id != tid {
+            kept.push(t)
+        }
+    }
+    threads = kept
+    save()
+    ui.list.render()
+    refresh_stats()
+    hide_detail()
+}
+
+fn add_demo_signal(){
+    let demo_signals = [
+        {title: "GitHub README 写了一半", kind: "写了没发", hint: "先把标题和第一段写了", emoji: "📄"},
+        {title: "答应妈周末视频", kind: "承诺没兑现", hint: "发微信问周六哪个时段方便", emoji: "👨‍👩‍👧"},
+        {title: "购物车里的耳机", kind: "想买没下单", hint: "b 站看 3 个评测再决定", emoji: "🎧"},
+        {title: "导师发的文献综述", kind: "读了没总结", hint: "写 3 句话 takeaway 就够", emoji: "📖"},
+        {title: "健身房私教课第 3 节", kind: "买了没上", hint: "打电话改到周日晚上", emoji: "💪"},
+        {title: "上周的周报", kind: "答应了没兑现", hint: "列 5 件事就够交差", emoji: "📊"},
+        {title: "朋友发的小说推荐", kind: "收藏没读", hint: "先看第一章开头 5 页", emoji: "📚"},
+        {title: "蚂蚁森林能量没收", kind: "日常忽略", hint: "打开收一下，10 秒", emoji: "🌳"},
+        {title: "医保电子凭证激活", kind: "老人任务", hint: "扫描身份证正面激活", emoji: "🏥"},
+        {title: "周日家庭会议话题", kind: "拖了没做", hint: "列 3 个话题草稿", emoji: "🏠"},
+        {title: "面试公司 Glassdoor 调研", kind: "研究了没总结", hint: "查 3 条员工评论", emoji: "💼"},
+        {title: "租房合同续签", kind: "答应了没兑现", hint: "微信房东问下周签", emoji: "🔑"},
+        {title: "健身房拉伸视频", kind: "收藏没看", hint: "今晚边看电视边拉伸", emoji: "🧘"},
+        {title: "毕业答辩 PPT", kind: "写了一页就停了", hint: "今晚补 3 页就够", emoji: "🎓"}
+    ]
+    let pick = demo_signals[random_u32() % demo_signals.len()]
+    let new_thread = {
+        id: next_id,
+        title: pick.title,
+        kind: pick.kind,
+        started_at: time_now(),
+        last_action_at: time_now(),
+        status: "open",
+        hint: pick.hint,
+        emoji: pick.emoji,
+        is_new: true
+    }
+    next_id = next_id + 1
+    threads.push(new_thread)
+    save()
+    ui.list.render()
+    refresh_stats()
+}
+
+fn reset_demo(){
+    threads = []
+    next_id = 1
+    learned_pattern = {best_hour: 22, snooze_count: 0, completed_count: 0}
+    seed_demo_data()
+    save()
+    ui.list.render()
+    refresh_stats()
+}
+
+fn show_detail(tid){
+    current_thread_id = tid
+    for t in threads {
+        if t.id == tid {
+            ui.detail_title.set_text(t.title)
+            ui.detail_kind.set_text(t.emoji + "  " + t.kind + " · " + days_since(t.started_at))
+            ui.detail_hint.set_text("下一步只要 30 秒：" + t.hint)
+        }
+    }
+    ui.detail_panel.set_visible(true)
+}
+
+fn hide_detail(){
+    ui.detail_panel.set_visible(false)
+    current_thread_id = 0
+}
+
+// 颜色
+let ink = #x1c1c1e
+let secondary = #x8e8e93
+let bg_white = #xffffff
+let bg_card = #xf2f2f7
+let accent = #x007aff
+let soft_red = #xff3b30
+let soft_green = #x34c759
+
+start_timeout(0.05, || load())
+
+// 主界面
+SolidView{width: Fill height: Fill flow: Down padding: 16 spacing: 12 draw_bg.color: bg_white
+    View{width: Fill height: Fit flow: Down spacing: 4
+        Label{text: "无提醒 Agent" draw_text.color: ink draw_text.text_style.font_size: 28}
+        Label{text: "不催不推，只帮启动" draw_text.color: secondary draw_text.text_style.font_size: 13}
+    }
+
+    // Stats — use SolidView.on_render (View family supports it)
+    stats_view := SolidView{width: Fill height: Fit flow: Down spacing: 4 padding: 12 draw_bg.color: bg_card draw_bg.border_radius: 8 on_render: || {
+        stats_label.set_text("Agent 发现 " + threads.len() + " 个半完成信号")
+        stats_sub.set_text("已帮你完成 " + learned_pattern.completed_count + " 件 · 暂缓 " + learned_pattern.snooze_count + " 件")
+        if learned_pattern.completed_count > 3 {
+            stats_insight.set_text("💡 你是个能做事的，别怕启动")
+        } else if learned_pattern.snooze_count > 2 {
+            stats_insight.set_text("💡 暂缓太多，下次试试 30 秒起步")
+        } else {
+            stats_insight.set_text("")
+        }
+        Label{text: "Agent 发现 " + threads.len() + " 个半完成信号" draw_text.color: ink draw_text.text_style.font_size: 13}
+        Label{text: "已帮你完成 " + learned_pattern.completed_count + " 件 · 暂缓 " + learned_pattern.snooze_count + " 件" draw_text.color: secondary draw_text.text_style.font_size: 12}
+        Label{text: "" draw_text.color: #xff9500 draw_text.text_style.font_size: 11}
+    }
+        stats_label := Label{text: "Agent 发现 0 个半完成信号" draw_text.color: ink draw_text.text_style.font_size: 13}
+        stats_sub := Label{text: "已帮你完成 0 件 · 暂缓 0 件" draw_text.color: secondary draw_text.text_style.font_size: 12}
+        stats_insight := Label{text: "" draw_text.color: #xff9500 draw_text.text_style.font_size: 11}
+
+    // 列表
+    list := ScrollYView{width: Fill height: Fill flow: Down spacing: 8 on_render: || {
+        if threads.len() == 0 {
+            View{width: Fill height: Fit flow: Down spacing: 12 padding: 32 draw_bg.color: bg_card draw_bg.border_radius: 8
+                Label{text: "🎉 没有半完成信号" draw_text.color: ink draw_text.text_style.font_size: 18}
+                Label{text: "Agent 没发现你拖了什么" draw_text.color: secondary draw_text.text_style.font_size: 12}
+                Label{text: "试试点击下方「+ 模拟 Agent 发现新信号」" draw_text.color: secondary draw_text.text_style.font_size: 12}
+            }
+        } else {
+            for i in threads.len() {
+                let t = threads[i]
+                let kc = kind_color(t.kind)
+                GestureView{width: Fill height: Fit padding: 12 spacing: 8 draw_bg.color: bg_card draw_bg.border_radius: 8
+                    on_tap: |x, y| show_detail(t.id)
+                    flow: Down
+                    View{width: Fill height: Fit flow: Right spacing: 8
+                        Label{text: t.emoji draw_text.text_style.font_size: 20}
+                        View{width: Fill height: Fill flow: Down spacing: 2
+                            Label{text: t.title draw_text.color: ink draw_text.text_style.font_size: 14}
+                            Label{text: t.kind + " · " + days_since(t.started_at) draw_text.color: secondary draw_text.text_style.font_size: 11}
+                        }
+                        if t.is_new { Label{text: "新" draw_text.color: #xff9500 draw_text.text_style.font_size: 10} }
+                        Label{text: "›" draw_text.color: secondary draw_text.text_style.font_size: 16}
+                    }
+                    Label{text: "→ " + t.hint draw_text.color: kc draw_text.text_style.font_size: 11}
+                }
+            }
+        }
+    }}
+
+    // 详情面板
+    detail_panel := View{width: Fill height: Fit visible: false flow: Down spacing: 12 padding: 16 draw_bg.color: bg_white draw_bg.border_radius: 12
+        detail_title := Label{text: "" draw_text.color: ink draw_text.text_style.font_size: 18}
+        detail_kind := Label{text: "" draw_text.color: secondary draw_text.text_style.font_size: 12}
+        detail_hint := Label{text: "" draw_text.color: ink draw_text.text_style.font_size: 14 width: Fill}
+
+        View{width: Fill height: Fit flow: Down spacing: 8 margin: Inset{top: 12}
+            ButtonFlat{text: "← 返回" height: 32 width: Fit padding: Inset{left: 16 right: 16} on_click: || hide_detail()
+                draw_bg +: {border_radius: 6.0 color: bg_white color_hover: bg_card color_down: #xd1d1d6 border_size: 0.0}
+                draw_text +: {color: secondary color_hover: secondary color_down: #x3c3c43}
+            }
+            ButtonFlat{text: "✓ 我做了" height: 44 width: Fill on_click: || {
+                if current_thread_id > 0 { complete_thread(current_thread_id) }
+            }
+                draw_bg +: {border_radius: 8.0 color: soft_green color_hover: #x2da44e color_down: #x278f43 border_size: 0.0}
+                draw_text +: {color: #xffffffff color_hover: #xffffffff color_down: #xffffffff}
+            }
+
+            ButtonFlat{text: "稍后再看" height: 40 width: Fill on_click: || {
+                if current_thread_id > 0 { snooze_thread(current_thread_id) }
+            }
+                draw_bg +: {border_radius: 8.0 color: bg_card color_hover: #xe5e5ea color_down: #xd1d1d6 border_size: 0.0}
+                draw_text +: {color: ink color_hover: ink color_down: #x3c3c43}
+            }
+
+            ButtonFlat{text: "放弃这件事" height: 36 width: Fill on_click: || {
+                if current_thread_id > 0 { abandon_thread(current_thread_id) }
+            }
+                draw_bg +: {border_radius: 8.0 color: bg_white color_hover: bg_card color_down: #xd1d1d6 border_size: 0.0}
+                draw_text +: {color: soft_red color_hover: soft_red color_down: #xc12d23}
+            }
+
+            }
+    }
+
+    // 操作栏
+    View{width: Fill height: Fit flow: Right spacing: 8
+        ButtonFlat{text: "+ 模拟 Agent 发现新信号" height: 44 on_click: || add_demo_signal()
+            draw_bg +: {border_radius: 8.0 color: accent color_hover: #x0a84ff color_down: #x0062cc border_size: 0.0}
+            draw_text +: {color: #xffffffff color_hover: #xffffffff color_down: #xffffffff}
+        }
+        ButtonFlat{text: "重置演示" height: 44 padding: Inset{left: 16 right: 16} on_click: || reset_demo()
+            draw_bg +: {border_radius: 8.0 color: bg_card color_hover: #xe5e5ea color_down: #xd1d1d6 border_size: 0.0}
+            draw_text +: {color: ink color_hover: ink color_down: #x3c3c43}
+        }
+    }
+}
