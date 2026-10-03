@@ -1,5 +1,7 @@
 # Current 0.4.1 update
 
+For the official host's AI configuration workflow and a read-only configuration check, see [runtime AI setup](docs/OFFICIAL_RUNTIME_AI.md). The development dual loop is separate from the application's runtime. Local-model tests do not establish the quality of another configured model. [Configuration and native settings verification](validation/OFFICIAL_AI_SETUP.md).
+
 Official-host inference has now been tested with the existing local deepseek-r1:7b model, without developer credentials or competition APIs. This verifies the real request path, but model quality is not accepted: a first draft contained only a placeholder, and the follow-up had mismatched evidence. The app now rejects placeholder-only drafts and continues to reject unsupported evidence.
 
 The cumulative native control-flow/UI/file set has60 passing checks, including actual45-second timeout and late-response refusal; synthetic callbacks are clearly labeled. Real model quality, a reliable end-to-end demonstration and competition acceptance remain pending. [Actual results and next work](validation/AI_LIVE_LOCAL.md).

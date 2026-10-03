@@ -1,0 +1,72 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "missing",
+      "status": "NO_PROFILE",
+      "passed": true
+    },
+    {
+      "case": "configured",
+      "status": "CONFIGURED_UNTESTED",
+      "passed": true
+    },
+    {
+      "case": "bom",
+      "status": "CONFIGURED_UNTESTED",
+      "passed": true
+    },
+    {
+      "case": "broken-json",
+      "status": "INVALID_PROFILE",
+      "passed": true
+    },
+    {
+      "case": "invalid-encoding",
+      "status": "INVALID_PROFILE",
+      "passed": true
+    },
+    {
+      "case": "array",
+      "status": "INVALID_PROFILE",
+      "passed": true
+    },
+    {
+      "case": "null",
+      "status": "INVALID_PROFILE",
+      "passed": true
+    },
+    {
+      "case": "disabled",
+      "status": "DISABLED_PROFILE",
+      "passed": true
+    },
+    {
+      "case": "truthy",
+      "status": "DISABLED_PROFILE",
+      "passed": true
+    },
+    {
+      "case": "no-config",
+      "status": "NO_PRIMARY",
+      "passed": true
+    },
+    {
+      "case": "bad-config",
+      "status": "NO_PRIMARY",
+      "passed": true
+    },
+    {
+      "case": "bad-llm",
+      "status": "NO_PRIMARY",
+      "passed": true
+    },
+    {
+      "case": "empty-primary",
+      "status": "NO_PRIMARY",
+      "passed": true
+    }
+  ],
+  "real_model_called": false,
+  "scope": "configuration diagnostics, malformed input, no writes and no secret output"
+}
