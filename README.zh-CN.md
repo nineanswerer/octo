@@ -1,3 +1,5 @@
+[Current 0.3.0 behavior and 29 passed checks](validation/OBSERVER.md). Historical 0.2.0 video below.
+
 # 南下 · 无提醒 Agent 0.2.0
 
 提供未完成邮件原文，应用以本地规则整理可编辑草稿；确认后保存并读回核验，重启恢复一致的草稿。取消不会覆盖以前保存的内容。

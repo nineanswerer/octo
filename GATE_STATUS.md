@@ -1,3 +1,6 @@
+Current 0.3.0: new pinned hub.exe check --allow-unsigned PASSED. Observation 17 + manual 12 native checks passed; see validation/OBSERVER.md. Unsigned, Windows only, no official acceptance.
+
+Historical status below:
 # Gate status — 2026-10-03
 
 Version 0.2.0 passes the local Windows command `hub.exe check bundle --allow-unsigned`. It is unsigned and is refused when unsigned bundles are not allowed. Storage only, no agent or network grants.

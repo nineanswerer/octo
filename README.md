@@ -1,3 +1,7 @@
+# Current 0.3.0 update
+
+Explicit opt-in app-owned draft processing with source revisions, ignore/defer and duplicate suppression is now implemented. See [observation behavior and validation](validation/OBSERVER.md). No online model or external/background observation. The earlier 0.2.0 recording below is historical.
+
 # No-Reminder Agent 0.2.0
 
 Windows OctoSense local draft helper. Paste an unfinished email, organize, edit and confirm saving. Local keyword rules preserve the original text and add a neutral closing. Saved files are read back and restored on restart.

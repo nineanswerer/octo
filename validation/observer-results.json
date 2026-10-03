@@ -1,0 +1,87 @@
+[
+  {
+    "case": "save_does_not_consent",
+    "passed": true,
+    "status": "观察已停用；来源已保存"
+  },
+  {
+    "case": "explicit_enable_proposes",
+    "passed": true,
+    "status": "来源：你提供的原文；下一步：编辑后确认保存"
+  },
+  {
+    "case": "ignore_blocks_execution",
+    "passed": true,
+    "status": "请先整理草稿；取消或修改原文后需重新整理"
+  },
+  {
+    "case": "ignored_restart_not_repeated",
+    "passed": true,
+    "status": "本版已处理、忽略或暂缓；不会重复建议"
+  },
+  {
+    "case": "same_content_not_new_revision",
+    "passed": true,
+    "status": "本版已处理、忽略或暂缓；不会重复建议"
+  },
+  {
+    "case": "new_revision_proposes",
+    "passed": true,
+    "status": "来源：你提供的原文；下一步：编辑后确认保存"
+  },
+  {
+    "case": "disable_blocks_save",
+    "passed": true,
+    "status": "请先整理草稿；取消或修改原文后需重新整理"
+  },
+  {
+    "case": "disabled_updates_do_not_process",
+    "passed": true,
+    "status": "观察已停用；来源已保存"
+  },
+  {
+    "case": "disabled_consent_restored",
+    "passed": true,
+    "status": "观察已停用；来源已保存"
+  },
+  {
+    "case": "saved_source_no_repaste",
+    "passed": true,
+    "status": "来源：你提供的原文；下一步：编辑后确认保存"
+  },
+  {
+    "case": "unsaved_edit_blocks_stale_action",
+    "passed": true,
+    "status": "请先整理草稿；取消或修改原文后需重新整理"
+  },
+  {
+    "case": "observed_confirm_readback",
+    "passed": true,
+    "status": "已保存并核验，尚未发送"
+  },
+  {
+    "case": "handled_revision_not_repeated",
+    "passed": true,
+    "status": "本版已处理、忽略或暂缓；不会重复建议"
+  },
+  {
+    "case": "deferred_revision_survives_restart",
+    "passed": true,
+    "status": "本版已处理、忽略或暂缓；不会重复建议"
+  },
+  {
+    "case": "cancel_suppresses_observed_revision",
+    "passed": true,
+    "status": "本版已处理、忽略或暂缓；不会重复建议"
+  },
+  {
+    "case": "clear_revokes_and_removes",
+    "passed": true,
+    "status": "本地数据已清除"
+  },
+  {
+    "case": "malformed_state_no_consent",
+    "passed": true,
+    "status": "来源状态损坏；未启用观察，请重新保存来源"
+  }
+]

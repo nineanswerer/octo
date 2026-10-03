@@ -1,7 +1,90 @@
 // 本地规则整理；没有在线模型、邮箱访问或消息发送
 let draft_ready = false
 let source_snapshot = ""
+
+let source_state = nil
+let observed_action = false
+fn persist_source(state){
+    let encoded = state.to_json()
+    fs.write("source-draft.json", encoded)
+    if fs.read("source-draft.json") != encoded { return false }
+    source_state = state
+    return true
+}
+fn invalidate(){
+    draft_ready = false
+    observed_action = false
+    ui.draft_area.set_visible(false)
+}
+fn process_source(){
+    invalidate()
+    if source_state == nil { return }
+    if source_state.enabled != true {
+        ui.status_label.set_text("观察已停用；来源已保存")
+        return
+    }
+    if source_state.ignored_revision == source_state.revision || source_state.deferred_revision == source_state.revision || source_state.handled_revision == source_state.revision {
+        ui.status_label.set_text("本版已处理、忽略或暂缓；不会重复建议")
+        return
+    }
+    ui.source_input.set_text(source_state.source)
+    organize()
+    if draft_ready { observed_action = true }
+}
 fn restore(){
+    invalidate()
+    if !fs.exists("source-draft.json") { restore_output(); return }
+    try {
+        let state = fs.read("source-draft.json").parse_json()
+        if state.source.trim() == "" || state.revision < 1 { return }
+        // Access all schema fields before adopting any stored permission.
+        let valid = state.enabled == true || state.enabled == false
+        let revision_check = state.ignored_revision + state.deferred_revision + state.handled_revision
+        if !valid { return }
+        source_state = state
+        ui.source_input.set_text(state.source)
+        process_source()
+    } catch { source_state = nil; invalidate(); ui.status_label.set_text("来源状态损坏；未启用观察，请重新保存来源") }
+}
+fn save_source(){
+    invalidate()
+    let text = ui.source_input.text()
+    if text.trim() == "" { ui.status_label.set_text("来源为空，不会保存"); return }
+    try {
+        let state = {source: text, revision: 1, ignored_revision: 0, deferred_revision: 0, handled_revision: 0, enabled: false}
+        if source_state != nil {
+            state.enabled = source_state.enabled
+            state.revision = source_state.revision
+            state.ignored_revision = source_state.ignored_revision
+            state.deferred_revision = source_state.deferred_revision
+            state.handled_revision = source_state.handled_revision
+            if text != source_state.source { state.revision = state.revision + 1 }
+        }
+        if !persist_source(state) { ui.status_label.set_text("来源保存失败；未核验"); return }
+        process_source()
+    } catch { ui.status_label.set_text("来源保存失败，请重试") }
+}
+fn set_observation(enabled){
+    invalidate()
+    if source_state == nil { ui.status_label.set_text("请先保存来源草稿；保存不等于授权"); return }
+    try {
+        let state = {source: source_state.source, revision: source_state.revision, ignored_revision: source_state.ignored_revision, deferred_revision: source_state.deferred_revision, handled_revision: source_state.handled_revision, enabled: enabled}
+        if !persist_source(state) { ui.status_label.set_text("授权状态保存失败，请重试"); return }
+        process_source()
+    } catch { source_state = nil; ui.status_label.set_text("授权状态写入失败；本次观察停止，请重试") }
+}
+fn suppress_source(defer){
+    invalidate()
+    if source_state == nil { ui.status_label.set_text("没有已保存的来源"); return }
+    try {
+        let state = {source: source_state.source, revision: source_state.revision, ignored_revision: source_state.ignored_revision, deferred_revision: source_state.deferred_revision, handled_revision: source_state.handled_revision, enabled: source_state.enabled}
+        if defer { state.deferred_revision = state.revision } else { state.ignored_revision = state.revision }
+        if !persist_source(state) { ui.status_label.set_text("状态未保存，请重试"); return }
+        ui.status_label.set_text("本版已忽略或暂缓；新内容才会再次建议")
+    } catch { ui.status_label.set_text("状态保存失败，请重试") }
+}
+
+fn restore_output(){
     try {
     ui.draft_area.set_visible(false)
     if fs.exists("draft-state.json") && fs.exists("user-draft.txt") {
@@ -22,6 +105,7 @@ fn restore(){
     } catch { ui.status_label.set_text("保存状态无法读取，请重新整理原文") }
 }
 fn organize(){
+    observed_action = false
     draft_ready = false
     ui.draft_area.set_visible(false)
     let text = ui.source_input.text()
@@ -52,6 +136,11 @@ fn confirm_save(){
         ui.status_label.set_text("草稿为空，不会保存")
         return
     }
+    if observed_action {
+        if source_state == nil || source_state.enabled != true || source_state.source != source_snapshot || ui.source_input.text() != source_snapshot {
+            invalidate(); ui.status_label.set_text("来源或授权已变化，请重新整理"); return
+        }
+    }
     fs.write("user-draft.txt", draft)
     if !fs.exists("user-draft.txt") || fs.read("user-draft.txt") != draft {
         ui.status_label.set_text("保存失败：结果无法读回核验")
@@ -63,10 +152,15 @@ fn confirm_save(){
         ui.status_label.set_text("草稿已写入，但恢复状态未核验成功")
         return
     }
+    if observed_action {
+        source_state.handled_revision = source_state.revision
+        if !persist_source(source_state) { ui.status_label.set_text("草稿已核验，处理状态未保存"); return }
+    }
     ui.status_label.set_text("已保存并核验，尚未发送")
     } catch { ui.status_label.set_text("保存失败：文件写入或读回未完成，请重试") }
 }
 fn cancel(){
+    if observed_action { suppress_source(false) }
     draft_ready = false
     ui.draft_area.set_visible(false)
     ui.draft_input.set_text("")
@@ -74,14 +168,17 @@ fn cancel(){
 }
 fn clear_data(){
     try {
+    if fs.exists("source-draft.json") { fs.remove("source-draft.json") }
     if fs.exists("user-draft.txt") { fs.remove("user-draft.txt") }
     if fs.exists("draft-state.json") { fs.remove("draft-state.json") }
-    if fs.exists("user-draft.txt") || fs.exists("draft-state.json") {
+    if fs.exists("source-draft.json") || fs.exists("user-draft.txt") || fs.exists("draft-state.json") {
         ui.status_label.set_text("清除失败；已有文件仍保留")
         return
     }
     ui.source_input.set_text("")
     ui.draft_input.set_text("")
+    source_state = nil
+    observed_action = false
     source_snapshot = ""
     draft_ready = false
     ui.draft_area.set_visible(false)
@@ -89,22 +186,27 @@ fn clear_data(){
     } catch { ui.status_label.set_text("清除失败；请检查本地存储") }
 }
 start_timeout(0.15, || restore())
-SolidView{width: Fill height: Fill flow: Down padding: 16 spacing: 10 draw_bg.color: #xffffff
+SolidView{width: Fill height: Fill flow: Down padding: 12 spacing: 6 draw_bg.color: #xffffff
     Label{text: "无提醒 Agent" draw_text.text_style.font_size: 25 draw_text.color: #x1c1c1e}
     Label{text: "本地规则整理 · 不调用在线模型" draw_text.text_style.font_size: 13 draw_text.color: #x666666}
     Label{text: "仅处理你提供的文本，不读取或发送邮件" draw_text.text_style.font_size: 12 draw_text.color: #x666666}
     Label{text: "提供未完成邮件的原文" draw_text.text_style.font_size: 14 draw_text.color: #x1c1c1e}
-    source_input := TextInput{width: Fill height: 110 is_multiline: true draw_text.color: #x1c1c1e text: ""
-        on_change: |text| { draft_ready = false }
+    source_input := TextInput{width: Fill height: 76 is_multiline: true draw_text.color: #x1c1c1e text: ""
+        on_change: |text| { invalidate() }
     }
-    ButtonFlat{text: "整理草稿" width: Fill height: 42 on_click: || organize() draw_text +: {color: #xffffff color_hover: #xffffff color_down: #xffffff} draw_bg +: {color: #x007aff color_hover: #x006be0 color_down: #x005bcc border_radius: 6.0}}
+    ButtonFlat{text: "整理草稿" width: Fill height: 34 on_click: || organize() draw_text +: {color: #xffffff color_hover: #xffffff color_down: #xffffff} draw_bg +: {color: #x007aff color_hover: #x006be0 color_down: #x005bcc border_radius: 6.0}}
+    ButtonFlat{text: "保存来源草稿" width: Fill height: 28 on_click: || save_source() draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
+    ButtonFlat{text: "启用观察" width: Fill height: 28 on_click: || set_observation(true) draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
+    ButtonFlat{text: "停用观察" width: Fill height: 28 on_click: || set_observation(false) draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
+    ButtonFlat{text: "忽略本版" width: Fill height: 28 on_click: || suppress_source(false) draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
+    ButtonFlat{text: "暂缓本版" width: Fill height: 28 on_click: || suppress_source(true) draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
     status_label := Label{text: "准备就绪，请提供原文" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x1c1c1e}
     draft_area := View{width: Fill height: Fit flow: Down spacing: 8 visible: false
         Label{text: "可编辑草稿（保留原文，添加中性结尾）" draw_text.text_style.font_size: 12 draw_text.color: #x1c1c1e}
-        draft_input := TextInput{width: Fill height: 140 is_multiline: true draw_text.color: #x1c1c1e text: ""}
+        draft_input := TextInput{width: Fill height: 100 is_multiline: true draw_text.color: #x1c1c1e text: ""}
     }
-    ButtonFlat{text: "确认保存" width: Fill height: 42 on_click: || confirm_save() draw_text +: {color: #xffffff color_hover: #xffffff color_down: #xffffff} draw_bg +: {color: #x007aff color_hover: #x006be0 color_down: #x005bcc border_radius: 6.0}}
-    ButtonFlat{text: "取消" width: Fill height: 36 on_click: || cancel() draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
-    ButtonFlat{text: "清除本地数据" width: Fill height: 36 on_click: || clear_data() draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
+    ButtonFlat{text: "确认保存" width: Fill height: 34 on_click: || confirm_save() draw_text +: {color: #xffffff color_hover: #xffffff color_down: #xffffff} draw_bg +: {color: #x007aff color_hover: #x006be0 color_down: #x005bcc border_radius: 6.0}}
+    ButtonFlat{text: "取消" width: Fill height: 28 on_click: || cancel() draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
+    ButtonFlat{text: "清除本地数据" width: Fill height: 28 on_click: || clear_data() draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
     Label{text: "只保存到本应用。你决定是否行动，我们不催促。" draw_text.text_style.font_size: 12 draw_text.color: #x666666}
 }

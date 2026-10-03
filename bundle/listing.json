@@ -17,13 +17,12 @@
   ],
   "icon": "assets/icon.svg",
   "screenshots": [
-    "screenshots/01-main.png",
-    "screenshots/02-save-failure.png"
+    "screenshots/01-main.png"
   ],
   "platforms": [
     "windows"
   ],
-  "release_notes": "Local-rule draft workflow with editable input, confirmed saving and readback verification. No online model or email sending.",
+  "release_notes": "Explicit opt-in processing of application-owned drafts, source revisions, ignore/defer and verified saving. Local rules only.",
   "age_rating": "all",
   "publisher": {
     "name": "Team 南下",
