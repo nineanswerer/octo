@@ -10,6 +10,7 @@
 - 同一原生渲染器中，仅测试副本替换宿主传输并缩短轮询/超时：16项通过，覆盖创建、更新、无关内容、去重、伪造证据/时间拒绝、模型错误不重试、停用及超时迟到结果、无/多邮箱、重启、保存失败和损坏文件保留。[结果](TASK_OBSERVER_SYNTHETIC_RESULT.json)。
 - [合成响应下的记录界面](OBSERVER_SYNTHETIC_RECORD.png)是真实原生界面截图，事项来自合成响应，不证明模型实际理解。
 - 官方完整 OctoSense 宿主通过本地测试签名商店安装0.5.0，实际调用mail.accounts返回“没有已授权邮箱”，可见正确停用状态：[结果](TASK_OBSERVER_FULL_HOST_RESULT.json)。说明邮箱服务已接通，不表示已有邮箱或已调用模型。复用了先前本人授权生成的本地测试密钥，没有新建密钥或公开上传。
+- 在全新、没有提供商配置的官方完整宿主中，仅将测试副本的邮箱读取替换为合成输入，保留真实model.complete调用：宿主返回no_provider，应用停止、没有保存事项、没有自动重试。[结果](TASK_OBSERVER_MODEL_CONTRACT_RESULT.json)。官方complete/mod.rs先执行request.check及Schema::compile，再检查提供商，因此该结果验证请求格式与schema被接受；没有调用任何模型提供商，不能证明识别质量。
 
 外环命令（开发工作区，测试脚本不作为运行依赖）：
 
