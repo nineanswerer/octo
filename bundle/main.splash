@@ -1,4 +1,45 @@
 // 本地规则整理；没有在线模型、邮箱访问或消息发送
+
+// Explicit non-billable host budget query. This is not voucher balance.
+let ai_pending = false
+let ai_generation = 0
+fn invalidate_ai(){
+    ai_generation += 1
+    ai_pending = false
+    ui.ai_status_label.set_text("尚未连接 AI；来源变更后请重新查询")
+}
+fn query_ai_budget(){
+    if ai_pending { return }
+    ai_generation += 1
+    let request_generation = ai_generation
+    ai_pending = true
+    ui.ai_status_label.set_text("正在查询宿主 AI 预算；不调用模型")
+    start_timeout(15.0, || {
+        if ai_generation == request_generation && ai_pending {
+            ai_pending = false
+            ai_generation += 1
+            ui.ai_status_label.set_text("AI 预算查询超时；输入已保留，可手动重试")
+        }
+    })
+    try {
+        host.request("model.budget", {}, fn(r){
+            if ai_generation != request_generation || !ai_pending { return }
+            ai_pending = false
+            try {
+                if r.is_ok {
+                    ui.ai_status_label.set_text("宿主 AI 预算：今日调用 " + r.data.calls_today.to_json() + "/" + r.data.calls_per_day.to_json() + "；剩余 token " + r.data.tokens_left.to_json())
+                } else {
+                    ui.ai_status_label.set_text("AI 服务不可用：" + r.error)
+                }
+            } catch { ui.ai_status_label.set_text("AI 预算响应格式错误；输入已保留") }
+        })
+    } catch {
+        ai_pending = false
+        ai_generation += 1
+        ui.ai_status_label.set_text("AI 服务不可用；输入已保留")
+    }
+}
+
 let draft_ready = false
 let source_snapshot = ""
 
@@ -12,6 +53,7 @@ fn persist_source(state){
     return true
 }
 fn invalidate(){
+    invalidate_ai()
     draft_ready = false
     observed_action = false
     ui.draft_area.set_visible(false)
@@ -160,6 +202,7 @@ fn confirm_save(){
     } catch { ui.status_label.set_text("保存失败：文件写入或读回未完成，请重试") }
 }
 fn cancel(){
+    invalidate_ai()
     if observed_action { suppress_source(false) }
     draft_ready = false
     ui.draft_area.set_visible(false)
@@ -167,6 +210,7 @@ fn cancel(){
     ui.status_label.set_text("已取消；没有保存本次编辑")
 }
 fn clear_data(){
+    invalidate_ai()
     try {
     if fs.exists("source-draft.json") { fs.remove("source-draft.json") }
     if fs.exists("user-draft.txt") { fs.remove("user-draft.txt") }
@@ -186,12 +230,13 @@ fn clear_data(){
     } catch { ui.status_label.set_text("清除失败；请检查本地存储") }
 }
 start_timeout(0.15, || restore())
-SolidView{width: Fill height: Fill flow: Down padding: 12 spacing: 6 draw_bg.color: #xffffff
+SolidView{width: Fill height: Fill draw_bg.color: #xffffff
+    ScrollYView{width: Fill height: Fill flow: Down padding: 12 spacing: 4
     Label{text: "无提醒 Agent" draw_text.text_style.font_size: 25 draw_text.color: #x1c1c1e}
     Label{text: "本地规则整理 · 不调用在线模型" draw_text.text_style.font_size: 13 draw_text.color: #x666666}
     Label{text: "仅处理你提供的文本，不读取或发送邮件" draw_text.text_style.font_size: 12 draw_text.color: #x666666}
     Label{text: "提供未完成邮件的原文" draw_text.text_style.font_size: 14 draw_text.color: #x1c1c1e}
-    source_input := TextInput{width: Fill height: 76 is_multiline: true draw_text.color: #x1c1c1e text: ""
+    source_input := TextInput{width: Fill height: 56 is_multiline: true draw_text.color: #x1c1c1e text: ""
         on_change: |text| { invalidate() }
     }
     ButtonFlat{text: "整理草稿" width: Fill height: 34 on_click: || organize() draw_text +: {color: #xffffff color_hover: #xffffff color_down: #xffffff} draw_bg +: {color: #x007aff color_hover: #x006be0 color_down: #x005bcc border_radius: 6.0}}
@@ -200,13 +245,18 @@ SolidView{width: Fill height: Fill flow: Down padding: 12 spacing: 6 draw_bg.col
     ButtonFlat{text: "停用观察" width: Fill height: 28 on_click: || set_observation(false) draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
     ButtonFlat{text: "忽略本版" width: Fill height: 28 on_click: || suppress_source(false) draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
     ButtonFlat{text: "暂缓本版" width: Fill height: 28 on_click: || suppress_source(true) draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
+    ButtonFlat{text: "查询 AI 预算" width: Fill height: 28 on_click: || query_ai_budget() draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
+    ai_status_label := Label{text: "尚未连接 AI" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x1c1c1e}
+    Label{text: "查询不调用模型；此预算不代表代金券余额" width: Fill height: Fit draw_text.text_style.font_size: 11 draw_text.color: #x666666}
     status_label := Label{text: "准备就绪，请提供原文" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x1c1c1e}
     draft_area := View{width: Fill height: Fit flow: Down spacing: 8 visible: false
         Label{text: "可编辑草稿（保留原文，添加中性结尾）" draw_text.text_style.font_size: 12 draw_text.color: #x1c1c1e}
-        draft_input := TextInput{width: Fill height: 100 is_multiline: true draw_text.color: #x1c1c1e text: ""}
+        draft_input := TextInput{width: Fill height: 80 is_multiline: true draw_text.color: #x1c1c1e text: ""}
     }
     ButtonFlat{text: "确认保存" width: Fill height: 34 on_click: || confirm_save() draw_text +: {color: #xffffff color_hover: #xffffff color_down: #xffffff} draw_bg +: {color: #x007aff color_hover: #x006be0 color_down: #x005bcc border_radius: 6.0}}
     ButtonFlat{text: "取消" width: Fill height: 28 on_click: || cancel() draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
     ButtonFlat{text: "清除本地数据" width: Fill height: 28 on_click: || clear_data() draw_text +: {color: #x1c1c1e color_hover: #x1c1c1e color_down: #x1c1c1e}}
     Label{text: "只保存到本应用。你决定是否行动，我们不催促。" draw_text.text_style.font_size: 12 draw_text.color: #x666666}
+}
+
 }

@@ -1,12 +1,13 @@
 {
   "capabilities": [
-    "storage"
+    "storage",
+    "model"
   ],
   "id": "no-reminder-agent",
   "integrity": {
-    "bundle_blake3": "9cc49f7dbf8c4387c6cab433cee67fa2ff195da4f1ebbaff8444cb3d43e1906d"
+    "bundle_blake3": "ada7866ea657cd95f48af1519527fac5167657a398d12030ac3f8ec57f494a7f"
   },
   "name": "无提醒 Agent",
   "schema": 1,
-  "version": "0.3.0"
+  "version": "0.3.2"
 }

@@ -1,0 +1,2 @@
+# Preserve exact bundle bytes: admission/signatures hash the packaged content.
+bundle/** -text

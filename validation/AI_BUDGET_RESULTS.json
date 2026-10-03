@@ -1,0 +1,202 @@
+{
+  "version": "0.3.2",
+  "source_sha256": "d22286f0aaea8e60646d32d5832f5943d04412b8ba862ff95e7cf1dc964063ae",
+  "full_host_sha256": "06288db0e48605e81e38a371606d0c5c14ba98378ae8cd0bca9b138f847f78ce",
+  "paid_completion_requested": false,
+  "independent_native_checks": {
+    "ai-final-manual": [
+      {
+        "case": "empty_start",
+        "passed": true,
+        "status": "准备就绪，请提供原文"
+      },
+      {
+        "case": "empty_input",
+        "passed": true,
+        "status": "请输入原文；空输入不会保存"
+      },
+      {
+        "case": "no_task",
+        "passed": true,
+        "status": "无需行动：未发现未完成的邮件草稿"
+      },
+      {
+        "case": "generate",
+        "passed": true,
+        "status": "来源：你提供的原文；下一步：编辑后确认保存"
+      },
+      {
+        "case": "source_change_blocks_save",
+        "passed": true,
+        "status": "请先整理草稿；取消或修改原文后需重新整理"
+      },
+      {
+        "case": "save_and_readback",
+        "passed": true,
+        "status": "已保存并核验，尚未发送"
+      },
+      {
+        "case": "idempotent_save",
+        "passed": true
+      },
+      {
+        "case": "restart_recovery",
+        "passed": true,
+        "status": "已恢复上次核验的草稿，尚未发送"
+      },
+      {
+        "case": "cancel_blocks_save",
+        "passed": true,
+        "status": "请先整理草稿；取消或修改原文后需重新整理"
+      },
+      {
+        "case": "clear_data",
+        "passed": true,
+        "status": "本地数据已清除"
+      },
+      {
+        "case": "save_failure",
+        "passed": true,
+        "status": "保存失败：文件写入或读回未完成，请重试"
+      },
+      {
+        "case": "inconsistent_restore_blocked",
+        "passed": true,
+        "status": "请先整理草稿；取消或修改原文后需重新整理"
+      }
+    ],
+    "ai-final-observer": [
+      {
+        "case": "save_does_not_consent",
+        "passed": true,
+        "status": "观察已停用；来源已保存"
+      },
+      {
+        "case": "explicit_enable_proposes",
+        "passed": true,
+        "status": "来源：你提供的原文；下一步：编辑后确认保存"
+      },
+      {
+        "case": "ignore_blocks_execution",
+        "passed": true,
+        "status": "请先整理草稿；取消或修改原文后需重新整理"
+      },
+      {
+        "case": "ignored_restart_not_repeated",
+        "passed": true,
+        "status": "本版已处理、忽略或暂缓；不会重复建议"
+      },
+      {
+        "case": "same_content_not_new_revision",
+        "passed": true,
+        "status": "本版已处理、忽略或暂缓；不会重复建议"
+      },
+      {
+        "case": "new_revision_proposes",
+        "passed": true,
+        "status": "来源：你提供的原文；下一步：编辑后确认保存"
+      },
+      {
+        "case": "disable_blocks_save",
+        "passed": true,
+        "status": "请先整理草稿；取消或修改原文后需重新整理"
+      },
+      {
+        "case": "disabled_updates_do_not_process",
+        "passed": true,
+        "status": "观察已停用；来源已保存"
+      },
+      {
+        "case": "disabled_consent_restored",
+        "passed": true,
+        "status": "观察已停用；来源已保存"
+      },
+      {
+        "case": "saved_source_no_repaste",
+        "passed": true,
+        "status": "来源：你提供的原文；下一步：编辑后确认保存"
+      },
+      {
+        "case": "unsaved_edit_blocks_stale_action",
+        "passed": true,
+        "status": "请先整理草稿；取消或修改原文后需重新整理"
+      },
+      {
+        "case": "observed_confirm_readback",
+        "passed": true,
+        "status": "已保存并核验，尚未发送"
+      },
+      {
+        "case": "handled_revision_not_repeated",
+        "passed": true,
+        "status": "本版已处理、忽略或暂缓；不会重复建议"
+      },
+      {
+        "case": "deferred_revision_survives_restart",
+        "passed": true,
+        "status": "本版已处理、忽略或暂缓；不会重复建议"
+      },
+      {
+        "case": "cancel_suppresses_observed_revision",
+        "passed": true,
+        "status": "本版已处理、忽略或暂缓；不会重复建议"
+      },
+      {
+        "case": "clear_revokes_and_removes",
+        "passed": true,
+        "status": "本地数据已清除"
+      },
+      {
+        "case": "malformed_state_no_consent",
+        "passed": true,
+        "status": "来源状态损坏；未启用观察，请重新保存来源"
+      }
+    ],
+    "ai-final-budget": [
+      {
+        "case": "missing_service_reported",
+        "passed": true,
+        "reply": "AI 服务不可用：no service answers \"model\" on this device"
+      },
+      {
+        "case": "budget_query_preserves_input",
+        "passed": true
+      },
+      {
+        "case": "budget_query_creates_no_draft",
+        "passed": true
+      },
+      {
+        "case": "manual_retry_bounded",
+        "passed": true
+      },
+      {
+        "case": "source_change_invalidates_ai",
+        "passed": true
+      },
+      {
+        "case": "cancel_invalidates_ai",
+        "passed": true
+      },
+      {
+        "case": "clear_preserved",
+        "passed": true,
+        "status": "请输入原文；空输入不会保存"
+      }
+    ]
+  },
+  "octo-model-no-grant": {
+    "paid_completion_requested": false,
+    "passed": true,
+    "reply": {
+      "is_ok": false,
+      "error": "this app was not granted \"model\", which \"model.budget\" needs"
+    }
+  },
+  "no-reminder-agent": {
+    "paid_completion_requested": false,
+    "passed": true,
+    "budget_ui": "宿主 AI 预算：今日调用 0/100；剩余 token 100000",
+    "full_host_save_readback": true
+  }
+}

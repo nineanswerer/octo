@@ -1,4 +1,8 @@
-# Current 0.3.0 update
+# Current 0.3.2 update
+
+The app now queries the official host's AI budget through `model.budget` on an explicit click. Successful budget retrieval, refusal without model permission, and actual draft saving were verified in the complete Windows host through a signed local test catalog. This is a service connection check: the app still uses local rules and does not call `model.complete`. The budget is a host call/token limit, not money or voucher balance. [Validation and limitations](validation/AI_BUDGET.md).
+
+# Previous 0.3.0 update
 
 Explicit opt-in app-owned draft processing with source revisions, ignore/defer and duplicate suppression is now implemented. See [observation behavior and validation](validation/OBSERVER.md). No online model or external/background observation. The earlier 0.2.0 recording below is historical.
 

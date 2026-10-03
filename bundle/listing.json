@@ -17,12 +17,12 @@
   ],
   "icon": "assets/icon.svg",
   "screenshots": [
-    "screenshots/01-main.png"
+    "screenshots/05-ai-budget.png"
   ],
   "platforms": [
     "windows"
   ],
-  "release_notes": "Explicit opt-in processing of application-owned drafts, source revisions, ignore/defer and verified saving. Local rules only.",
+  "release_notes": "Explicit non-billable official host AI budget query and scrollable layout. Draft generation remains local rules; no model completions.",
   "age_rating": "all",
   "publisher": {
     "name": "Team 南下",
