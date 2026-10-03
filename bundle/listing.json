@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "subtitle": "不催不推，只帮启动",
-  "description": "本地规则识别用户提供的未完成邮件文本，保留原文、生成可编辑草稿，确认保存后读回核验。不读取或发送邮件，不调用在线模型。",
+  "description": "点击 AI 按钮经官方宿主理解你提供的未完成事项，展示原文依据、缺失信息、小步骤和可编辑草稿。模型由宿主管理；无可用服务时保留输入，可改用本地规则。确认保存后读回核验，不读取或发送邮件。",
   "category": "productivity",
   "keywords": [
     "拖延症",
@@ -17,12 +17,12 @@
   ],
   "icon": "assets/icon.svg",
   "screenshots": [
-    "screenshots/05-ai-budget.png"
+    "screenshots/06-ai-no-provider.png"
   ],
   "platforms": [
     "windows"
   ],
-  "release_notes": "Explicit non-billable official host AI budget query and scrollable layout. Draft generation remains local rules; no model completions.",
+  "release_notes": "Official model.complete integration with explicit input consent, structured results and evidence checks. Late replies are discarded after edits/cancellation. Native synthetic response tests passed; live model generation remains unverified.",
   "age_rating": "all",
   "publisher": {
     "name": "Team 南下",

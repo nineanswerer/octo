@@ -1,0 +1,47 @@
+{
+  "mode": "synthetic native callback; no runtime model inference",
+  "checks": [
+    {
+      "case": "synthetic_positive_draft",
+      "passed": true,
+      "status": "AI 已生成分析（仅依据你提供的内容）；请编辑确认后再保存"
+    },
+    {
+      "case": "synthetic_details",
+      "passed": true
+    },
+    {
+      "case": "confirmation_required",
+      "passed": true
+    },
+    {
+      "case": "synthetic_confirm_readback",
+      "passed": true
+    },
+    {
+      "case": "any_bad_evidence_rejects_entire_response",
+      "passed": true,
+      "status": "请先整理草稿；取消或修改原文后需重新整理"
+    },
+    {
+      "case": "positive_needs_evidence",
+      "passed": true,
+      "status": "请先整理草稿；取消或修改原文后需重新整理"
+    },
+    {
+      "case": "no_task_has_details",
+      "passed": true,
+      "status": "AI 判断无需行动；详情请查看上方标签"
+    },
+    {
+      "case": "cancel_drops_late_result",
+      "passed": true,
+      "status": "请先整理草稿；取消或修改原文后需重新整理"
+    },
+    {
+      "case": "source_change_drops_late_result",
+      "passed": true,
+      "status": "请先整理草稿；取消或修改原文后需重新整理"
+    }
+  ]
+}

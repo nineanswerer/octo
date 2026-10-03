@@ -1,0 +1,38 @@
+[
+  {
+    "case": "empty_input_no_action",
+    "passed": true,
+    "status": "请先输入原文"
+  },
+  {
+    "case": "official_model_service_error_visible",
+    "passed": true,
+    "answer": "AI 请求失败，请重试"
+  },
+  {
+    "case": "input_preserved",
+    "passed": true
+  },
+  {
+    "case": "no_automatic_save",
+    "passed": true
+  },
+  {
+    "case": "failed_completion_not_savable",
+    "passed": true,
+    "status": "请先整理草稿；取消或修改原文后需重新整理"
+  },
+  {
+    "case": "local_fallback_still_works",
+    "passed": true
+  },
+  {
+    "case": "old_draft_cleared_on_ai_request",
+    "passed": true,
+    "status": "请先整理草稿；取消或修改原文后需重新整理"
+  },
+  {
+    "case": "edits_invalidate_ai",
+    "passed": true
+  }
+]

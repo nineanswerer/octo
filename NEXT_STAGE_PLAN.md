@@ -22,7 +22,7 @@
 | --- | --- | --- |
 | AI-001，10/3优先 | 核查完整宿主锁定依赖、Windows启动、应用加载及model注册 | 独立目录构建或验证官方匹配包；同一应用真实加载；不混用宿主依赖；记录失败原因和源版本 |
 | AI-002，紧随其后 | 非付费探针验证model权限、无provider和预算接口 | 无model权限拒绝；有权限进入实际服务；无provider显示明确错误；不先花费未知资金 |
-| AI-003，10/3–10/4 | 宿主配置模型、费用门禁及最小真实调用 | 只允许已核实的比赛券路由；余额/扣费来源不明不调用。开发Plan适用性单独核实。一次合成输入返回真实模型结果、可查用量，不以模拟器冒充 |
+| AI-003，10/3–10/4 | 宿主配置模型、费用门禁及最小真实调用 | 应用接官方宿主 model.complete，不接开发代理的比赛API。核验宿主官方模型配置与实际使用边界；一次合成输入取得真实模型结果和用量，不以模拟响应冒充 |
 | APP-012，10/4核心 | 运行时理解、卡点和可编辑产物 | 输出has_task、evidence、missing_information、next_step、draft；必须引用原文事实；无任务不强制生成，缺事实明确留空或询问；失败保留输入 |
 | APP-013，10/4 | 用户体验与实际行动 | 显示来源、AI状态和一个小步骤；编辑/取消/暂缓；确认才保存；来源变化丢弃旧响应；读回后才标记成功，绝不称已发送 |
 | RELEASE-AI，10/4内部21:00 | 初赛版本与证据冻结 | 同版本实时AI录像、正常/失败截图、宿主复现、费用和隐私说明；核实入口并取得真实回执，官方截止23:59 |
@@ -62,3 +62,5 @@ Codex外环定义自包含任务、验收、费用边界和独立复验；MiniMa
 - https://github.com/OctoSense-org/OctoSense/pull/95
 - https://github.com/gosimfoundation/hackathon-agenticapp26/blob/main/docs/competition-schedule.md
 - https://github.com/gosimfoundation/hackathon-agenticapp26/blob/main/docs/app-hub-submission.md
+
+2026-10-03 0.4.0 更新：官方 model.complete 接口、结构化结果、证据子串核验和可编辑草稿已实现；53项原生 UI/文件检查通过，其中9项为明确标注的合成响应检查。完整宿主真实调用返回 no_provider，原文保留。下一步核验宿主官方 AI 配置后做真实模型生成与六类质量验收；不得复制开发 MiniMax 凭证，不将比赛券余额作为接口代码开发的前置条件。真实生成仍未完成。

@@ -1,0 +1,7 @@
+{
+  "paid_completion_requested": false,
+  "passed": true,
+  "official_completion_error": "AI 服务错误：no_provider: No AI provider is set up. Add one in AI providers.；请重试或编辑原文",
+  "source_preserved": true,
+  "runtime_generation_verified": false
+}

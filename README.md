@@ -1,4 +1,10 @@
-# Current 0.3.2 update
+# Current 0.4.0 update
+
+An explicit AI button now calls the official host's `model.complete` interface, handles structured evidence/missing information/next step/editable draft, and keeps confirmation plus save readback. The application does not read or reuse development-agent credentials. Local rules remain a fallback.
+
+53 native UI/file checks passed across real service-error paths, synthetic callbacks and existing workflows. In the full official Windows host, the actual call returned `no_provider`; no provider-backed generation is claimed. Configure AI through the host's official AI providers settings. [Validation and limitations](validation/AI_COMPLETE.md), [privacy](PRIVACY.md).
+
+# Previous 0.3.2 update
 
 The app now queries the official host's AI budget through `model.budget` on an explicit click. Successful budget retrieval, refusal without model permission, and actual draft saving were verified in the complete Windows host through a signed local test catalog. This is a service connection check: the app still uses local rules and does not call `model.complete`. The budget is a host call/token limit, not money or voucher balance. [Validation and limitations](validation/AI_BUDGET.md).
 
