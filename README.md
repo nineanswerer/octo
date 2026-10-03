@@ -1,4 +1,10 @@
-# Current 0.4.0 update
+# Current 0.4.1 update
+
+Official-host inference has now been tested with the existing local deepseek-r1:7b model, without developer credentials or competition APIs. This verifies the real request path, but model quality is not accepted: a first draft contained only a placeholder, and the follow-up had mismatched evidence. The app now rejects placeholder-only drafts and continues to reject unsupported evidence.
+
+The cumulative native control-flow/UI/file set has60 passing checks, including actual45-second timeout and late-response refusal; synthetic callbacks are clearly labeled. Real model quality, a reliable end-to-end demonstration and competition acceptance remain pending. [Actual results and next work](validation/AI_LIVE_LOCAL.md).
+
+# Previous 0.4.0 update
 
 An explicit AI button now calls the official host's `model.complete` interface, handles structured evidence/missing information/next step/editable draft, and keeps confirmation plus save readback. The application does not read or reuse development-agent credentials. Local rules remain a fallback.
 

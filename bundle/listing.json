@@ -17,12 +17,12 @@
   ],
   "icon": "assets/icon.svg",
   "screenshots": [
-    "screenshots/06-ai-no-provider.png"
+    "screenshots/07-ai-evidence-rejected.png"
   ],
   "platforms": [
     "windows"
   ],
-  "release_notes": "Official model.complete integration with explicit input consent, structured results and evidence checks. Late replies are discarded after edits/cancellation. Native synthetic response tests passed; live model generation remains unverified.",
+  "release_notes": "Reject placeholder-only drafts. Real official-host local-model inference tested; draft quality is not yet accepted. Native timeout and late-response rejection verified.",
   "age_rating": "all",
   "publisher": {
     "name": "Team 南下",

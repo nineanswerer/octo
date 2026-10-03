@@ -1,0 +1,9 @@
+{
+  "paid_completion_requested": false,
+  "passed": true,
+  "observed_status": "AI 已生成分析（仅依据你提供的内容）；请编辑确认后再保存",
+  "runtime_generation_verified": true,
+  "local_model": "deepseek-r1:7b",
+  "draft": "待补充",
+  "details": "依据：项目进度邮件还没写完。；数据接入已经完成，测试结果还需要核实。\n下一步：请问测试结果需要核实的具体情况？"
+}

@@ -25,3 +25,5 @@ MiniMax Plan implementation receipt MCP-2dad3b50-20fc-4d89-a310-08cf7425afe9 and
 ## Still unverified
 
 Actual provider-backed inference, six-case model quality, host cancellation/fallback behavior under network delay and the 45-second timeout are not verified. The isolated host has no provider configured. This version proves official interface integration and result-handling behavior, not live AI generation or competition acceptance. Next step is verify the intended official host AI setup without copying development credentials, then run bounded real generation and collect same-version demonstration evidence.
+
+2026-10-03 follow-up: actual local inference and the unchanged45-second timeout have now been exercised. Model-quality acceptance failed and remains pending; see AI_LIVE_LOCAL.md for0.4.0/0.4.1 results and the new placeholder guard. Earlier unverified statements above describe the initial0.4.0 service-only milestone.

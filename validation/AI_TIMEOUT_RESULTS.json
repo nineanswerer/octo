@@ -1,0 +1,29 @@
+{
+  "mode": "synthetic callback; actual production timeout unchanged",
+  "checks": [
+    {
+      "case": "real_45s_app_timeout",
+      "passed": true,
+      "elapsed_seconds": 45.22,
+      "status": "AI 响应超时；输入已保留，可重新点击按钮"
+    },
+    {
+      "case": "timeout_preserves_input",
+      "passed": true
+    },
+    {
+      "case": "timeout_no_auto_save",
+      "passed": true
+    },
+    {
+      "case": "48s_late_response_ignored",
+      "passed": true,
+      "status": "AI 响应超时；输入已保留，可重新点击按钮"
+    },
+    {
+      "case": "late_response_not_savable",
+      "passed": true,
+      "status": "请先整理草稿；取消或修改原文后需重新整理"
+    }
+  ]
+}
