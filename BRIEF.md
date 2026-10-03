@@ -1,5 +1,41 @@
 # 南下 · 无提醒 Agent
 
-Help a user start a small step without repeated reminders. Version 0.2.0 accepts user-provided unfinished email text, conservatively identifies it with local keyword rules, offers an editable draft preserving the source, and saves only after confirmation. It reads files back to verify the result and restores consistent saved drafts.
+更新：2026-10-03。区分已验证原型与待开发产品。
 
-Current capability is deliberately limited: no account access, sending, background observation, online interpretation or timing learning. Only Windows has been tested. The broader intended Agent behavior remains in DEVELOPMENT_PLAN.md.
+## 问题与价值假设
+
+面向已有邮件或笔记草稿，却迟迟没有继续写的人。目标是减少重新理解上下文和写第一句的成本。用户无需先设提醒；应用从明确授权的草稿发现可能的未完成事项，在用户主动打开时提供一个能立刻执行的小步骤。
+
+减少启动成本是待验证假设，不能凭演示推断效果。先聚焦邮件草稿，不扩展到全盘观察或完整个人助理。
+
+## 产品原理
+
+授权来源 → 发现新信号 → 判断未完成事项 → 引用依据、提出一个小步骤 → 用户编辑或拒绝 → 确认后执行 → 读回核验 → 更新后续状态。
+
+观察权限与执行权限分开：允许读取不等于允许写入或发送。输入中的指令不能扩大工具权限。低置信度时询问或不行动。来源变化后旧建议失效，同一来源版本不重复执行；忽略和暂缓必须生效。
+
+“无提醒”的具体约束：默认没有推送、倒计时或连续催促；主动打开时只呈现一个可处理事项。自动发现须显式启用，并可停用和撤销授权。此能力尚未实现。
+
+## 已验证原型与缺口
+
+0.2.0：手动输入、本地关键词判断、保留原文并添加中性结尾、编辑、确认保存、读回、重启恢复、取消和清除。固定源码宿主构建成功，12项原生界面与文件检查通过，证据见 validation/host-build.json 和 new-host-results.json。
+
+当前只是有限的草稿整理工具：手动粘贴仍有启动成本，关键词会误判，追加结尾未必有帮助。没有主动观察、语义推理、邮件发送或时机学习；不能称作完整运行时 Agent 或宣称赛事验收通过。
+
+## 开发架构
+
+先选应用内草稿作为唯一观察源，支持用户保存待处理草稿和启用/停用整理。来源与版本、授权、事项、建议和执行结果分别存储。来源版本与动作类型组成去重标识，旧建议不得覆盖新草稿。
+
+规则或模型只输出候选事项、来源片段、小步骤及草稿。确定性执行层核对权限、版本、确认与写入范围；读回实际文件后才能标记已保存。无任务、拒绝、暂缓、失败和冲突均有独立状态。
+
+当前 card-host 没有 model 服务，开发 MiniMax Plan 不代表应用运行时服务。模型接入先验证宿主、数据范围和费用门禁；普通 API 禁用，比赛券余额与扣费边界不明确时停止该路由。不可用时保留输入并诚实降级，不以预录回复冒充实时调用。
+
+## 下一步及验收
+
+1. 初赛交付：对齐源码、宿主、启动说明、截图、录像和限制，核对正式入口，取得真实回执。
+2. 状态与授权：实现应用内草稿、版本、启用/停用、去重、忽略/暂缓。验收无需重复粘贴、相同版本不重复建议、停用后不处理、旧建议不覆盖新内容。
+3. 语义能力：服务及费用可验证后接入结构化推理；普通记录不生造任务、缺事实不编造、输入指令不扩大权限、失败不丢原文。接通前仍称规则能力。
+4. 真实试用：比较自行继续写与使用应用的首次有效编辑时间、事实修正、建议接受/拒绝及打扰反馈。必须来自真实试用；小样本不声称统计结论。
+5. 兼容扩展：核心流程稳定后再做 Rinx、多来源和个性化。
+
+Codex 外环负责目标、验收、独立复验和合入；MiniMax 内环负责有界实现与回执。开发双环服务于交付，不能替代产品价值与运行时自动化证据。赛制节点见 DEVELOPMENT_PLAN.md。
