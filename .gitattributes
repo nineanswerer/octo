@@ -1,2 +1,2 @@
 # Preserve exact bundle bytes: admission/signatures hash the packaged content.
-bundle/** -text
+bundle/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
