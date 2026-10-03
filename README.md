@@ -1,5 +1,7 @@
 # 南下 · 无提醒 Agent 0.4.1
 
+**[中文介绍与使用说明](README.zh-CN.md)**
+
 A Windows draft helper for unfinished email or notes: provide text, organize a small next step, edit, confirm saving, and verify the saved result. No notifications or automatic sending. Reducing startup effort remains a hypothesis, not a measured benefit.
 
 Current verified behavior: local-rule organization, editing, explicit save/readback, restart recovery and failure handling. Opt-in processing is limited to this app's saved source drafts, with revisions, ignore/defer and duplicate suppression. It does not inspect external mail or run a background watcher.
