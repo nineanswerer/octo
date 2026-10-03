@@ -1,13 +1,14 @@
 {
   "capabilities": [
     "storage",
+    "mail",
     "model"
   ],
   "id": "no-reminder-agent",
   "integrity": {
-    "bundle_blake3": "df703f245324766db776c959a5b21b2979a09830377766dae8c6aeb20ce6573f"
+    "bundle_blake3": "b41b2e5e55d5156478bdb90feb9da9817bb802687c395d1a1371bbe131560c10"
   },
   "name": "无提醒 Agent",
   "schema": 1,
-  "version": "0.4.1"
+  "version": "0.5.0"
 }

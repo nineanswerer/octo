@@ -1,18 +1,13 @@
-# 南下 · 无提醒 Agent 0.4.1
+# 中文使用说明 · 0.5.0
 
-面向有半完成邮件或笔记、却难以继续写的人。只处理你提供的内容，不催促、不自动发送。
+本版本按“授权来源 → AI判断 → 自动记录与更新”的产品目标开发。先接一个邮箱，未接其他应用。
 
-已验证：本地规则整理、编辑、确认保存、读回核验、重启恢复和失败反馈。可显式启用应用内已保存来源草稿的处理，支持版本、忽略、暂缓及去重；不观察外部邮箱或后台事件。
+使用完整 OctoSense 宿主，配置实际可用模型；单独 card-host 没有邮箱和模型服务。点击“连接邮箱”后在宿主授权页面登录，再点击“启用观察与 AI 分析”。启用后自动检查最近5封收件邮件，不需要逐封点击。点击“停用观察”后不再发起读取和分析，迟到结果丢弃；退出后停止，重启默认停用。
 
-官方 AI 接口已实现，但需要完整宿主及模型配置。现有本地模型测试只证明调用链路，输出质量未通过；不能称为可靠的 AI 应用。开发双环与应用运行时分开。
+模型识别出的记录保留事项、截止时间原文、证据、发件人、主题及原邮件日期。后续邮件可更新已有事项；同一邮件成功处理后不重复调用模型。相对时间不伪装成确定绝对日期，AI仍可能误判。
 
-在本仓库打开 PowerShell：
+数据写入宿主应用隔离目录的 observer-state.json 并读回核验。独立渲染器目录为 .local-state/no-reminder-agent。旧版草稿文件不删除。模型失败、超时、存储失败或格式异常会停止观察；未成功的消息不会标为已处理。
 
-```powershell
-$env:OCTO_CARD_HOST='C:\Users\steam\Desktop\octo\runtime\host-repro\OctoSense-App-Hub\target\release\card-host.exe'
-& .\octocard.bat
-```
+只支持一个授权邮箱，应用打开时每30秒检查，最近5封之外可能遗漏；记录/去重各100条满后停止。不发送邮件、不提醒、不进行全系统扫描。
 
-输入原文 → 整理草稿 → 编辑 → 确认保存。保存位置为 `.local-state/no-reminder-agent/`，状态明确为“尚未发送”。此入口只启动渲染器，AI 按钮不能靠它完成模型请求。
-
-[复现与验收](validation/INITIAL_DELIVERY.md) · [演示](demo/README.md) · [交付状态](SUBMISSION_NOTES.md) · [官方 AI 配置](docs/OFFICIAL_RUNTIME_AI.md) · [隐私](PRIVACY.md) · [开发计划](DEVELOPMENT_PLAN.md)。只验证 Windows；未取得正式初赛或 App Hub 接收回执。
+[首页](README.md) · [当前验证与限制](validation/TASK_OBSERVER.md) · [官方AI配置](docs/OFFICIAL_RUNTIME_AI.md) · [隐私](PRIVACY.md)。真实邮箱与模型完整回环尚待本人授权验收。

@@ -1,42 +1,35 @@
 # 南下 · 无提醒 Agent
 
-帮助你继续完成写了一半的邮件或笔记：提供原文，整理草稿，编辑后确认保存，应用读回文件核验结果。不催促、不自动发送。
+**让 AI 从授权来源主动识别需要记录的事，而不是由人逐条创建待办。**例如邮件说“今天晚上6点前交稿”，AI判断是否与你有关，记录事项、截止时间原文与出处；后续说“改成明天中午”，更新同一事项。
 
-当前初赛候选为 **0.4.1，OctoScript 应用**，固定版本为 [`v0.4.1-initial`](https://github.com/nineanswerer/octo/tree/v0.4.1-initial)。
+当前开发候选 **0.5.0：授权邮箱事项观察，纯 OctoScript 应用**。已实现官方邮箱与模型调用、事项保存读回、更新和去重。原生控制流程测试已通过；**真实邮箱与真实模型的完整回环尚待本人授权验收，不能称为已完成。**
 
-已验证本地规则整理、编辑、保存核验、重启恢复和失败反馈；支持应用内已保存来源的版本、忽略、暂缓及去重。跨软件主动发现需求是后续目标，目前尚未实现。
+## 如何使用
 
-官方宿主 AI 接口已实现，但需要完整宿主和模型配置。现有本地模型测试证明了调用链路，输出质量未通过验收。开发时的 Codex / MiniMax 双环不属于应用运行功能。
+1. 在带官方 `mail` 和 `model` 服务的完整 OctoSense 宿主中加载应用，配置可用模型。
+2. 点击“连接邮箱”，在宿主授权页面完成登录。应用不收集密码。
+3. 点击“启用观察与 AI 分析”，授权读取单一邮箱最近5封并交给宿主模型判断；无需逐封点击分析。
+4. 查看自动记录的事项、截止原文、证据及出处；需要时点击“停用观察”。
 
-## 使用方法
+仅应用打开时每30秒检查，重启默认停用；历史及去重各100条，满后停止。不发送邮件、不弹提醒。不扫描其他软件；最近5封之外可能遗漏。AI可能误判，时间不确定时保留原文供核对。
 
-在本仓库目录打开 PowerShell，运行：
-
-```powershell
-$env:OCTO_CARD_HOST='C:\Users\steam\Desktop\octo\runtime\host-repro\OctoSense-App-Hub\target\release\card-host.exe'
-& .\octocard.bat
-```
-
-输入原文 → 点击“整理草稿” → 编辑 → 点击“确认保存”。文件保存在 `.local-state/no-reminder-agent/`，成功状态为“已保存并核验，尚未发送”。
-
-上述路径是本机已验证的渲染器。其他电脑需构建匹配宿主，并设置 `OCTO_CARD_HOST` 为其绝对路径；仓库不附带宿主二进制或密钥。独立渲染器没有模型服务。目前只验证 Windows。
+`octocard.bat` 仍可打开独立渲染器查看界面，但它没有邮箱和模型服务，**不能完成上述回环**。只验证 Windows。宿主构建与配置见下方文档，仓库不附带宿主二进制或凭证。
 
 ## 文档与交付材料
 
 | 内容 | 入口 |
 | --- | --- |
-| 中文使用说明 | [功能、启动与操作](README.zh-CN.md) |
-| 项目需求 | [面向谁、解决什么问题、当前范围](BRIEF.md) |
-| 初赛交付状态 | [已有材料、限制与待办](SUBMISSION_NOTES.md) |
-| 当前版本演示 | [演示说明](demo/README.md) · [122.5 秒实录](demo/initial-0.4.1.mp4) |
-| 两张关键截图 | [保存成功](demo/screenshots/initial-saved.png) · [保存失败](demo/screenshots/initial-failure.png) |
-| 初赛独立验证 | [复现步骤与验证结论](validation/INITIAL_DELIVERY.md) · [12 项检查结果](validation/INITIAL_DELIVERY_RESULT.json) |
-| 官方 AI 配置 | [宿主接口、模型配置与使用条件](docs/OFFICIAL_RUNTIME_AI.md) |
-| AI 实测情况 | [真实调用与输出质量限制](validation/AI_LIVE_LOCAL.md) |
-| 开发计划 | [赛制节点与验收条件](DEVELOPMENT_PLAN.md) |
-| 数据与隐私 | [读取、保存与权限范围](PRIVACY.md) |
-| 冻结版本信息 | [文件指纹与版本记录](release/INITIAL_FREEZE.json) |
-| 应用包预检 | [预检输出](release/hub-check.txt) · [审查回答](release/REVIEW_ANSWERS.md) |
+| 中文使用说明 | [授权、启用与保存位置](README.zh-CN.md) |
+| 项目需求 | [核心目标与初赛最小范围](BRIEF.md) |
+| 新版本验证 | [0.5.0真实检查与合成测试的区别](validation/TASK_OBSERVER.md) |
+| 合成记录截图 | [原生界面，非真实AI理解证据](validation/OBSERVER_SYNTHETIC_RECORD.png) |
+| 初赛交付状态 | [待验收与待报送内容](SUBMISSION_NOTES.md) |
+| 官方 AI 配置 | [宿主、模型与配置条件](docs/OFFICIAL_RUNTIME_AI.md) |
+| 宿主复现 | [构建记录](validation/INITIAL_DELIVERY.md) |
+| 开发计划 | [赛制节点与当前优先级](DEVELOPMENT_PLAN.md) |
+| 数据与隐私 | [读取、保存、停用及权限范围](PRIVACY.md) |
+| 旧版0.4.1演示 | [旧草稿原型录像和截图，非0.5.0回环](demo/README.md) |
+| 旧版冻结记录 | [0.4.1文件指纹](release/INITIAL_FREEZE.json) |
 | 开源许可 | [Apache-2.0](LICENSE) |
 
-演示展示本地规则流程，不代表已完成实时 AI。应用包预检、界面和文件验证、App Hub 上架及赛事接收是不同事项；目前没有正式初赛或 App Hub 接收回执。
+旧草稿原型保留在 [`v0.4.1-initial`](https://github.com/nineanswerer/octo/tree/v0.4.1-initial)，未覆盖标签。当前开发代码与旧录像不能混作同版本证据。没有正式初赛或 App Hub 接收回执。
