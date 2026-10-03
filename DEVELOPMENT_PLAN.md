@@ -6,7 +6,7 @@
 
 作品主题：从用户授权的半完成信号中发现未完成事项，帮助完成一个低启动成本的下一步，不催促、不自动发送消息。主场景先选邮件草稿，扩展到本地笔记；不是做一个通用提醒或聊天工具。
 
-当前源码基线为 41ef6a5：演示事项、处理状态、本地存储和统计交互已有，统计显示和包摘要修复已推送。先前 Windows 实测界面交互、文件持久化及 Hub 本地预检通过；不能据此宣称赛事接收或运行时 Agent 功能完成。真实输入、运行时推理与实际任务结果核验尚缺。其他平台未验证。
+Current verified baseline: 6072276 / app 0.2.0. Real manual input, local rules, editing, confirmed save/readback and recovery pass twelve native checks on a newly built pinned host. Runtime inference, authorized observation and competition receipt remain pending. See BRIEF.md and validation/host-build.json.
 
 开发侧：Codex 外环与 MiniMax 内环的按任务派单、持锁、回执和独立复验冒烟通过，重启预检入口已准备。常驻双哨、协议黑板、长期目标恢复、比赛券自动切换未完成。开发侧的模型调用不等于作品运行时有 Agent。
 
@@ -119,3 +119,5 @@ MiniMax Plan 已授权用于开发内环；不能自动认定它可以用于应�
 - [赛事赛程与交付要求](https://github.com/gosimfoundation/hackathon-agenticapp26/blob/main/docs/competition-schedule.md)
 - [App Hub 提交与运行验收指南](https://github.com/gosimfoundation/hackathon-agenticapp26/blob/main/docs/app-hub-submission.md)
 - [比赛主页](https://create.gosim.org/agenticapp26/)
+
+Current next task: RELEASE-001 delivery alignment and entry verification, followed by APP-008/009 application-owned draft state and explicit observation consent. This supersedes the earlier APP-002 next-task reference. Semantic inference and runtime model failures remain unimplemented.
