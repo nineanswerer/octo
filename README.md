@@ -1,41 +1,26 @@
-# Current 0.4.1 update
+# 南下 · 无提醒 Agent 0.4.1
 
-For the official host's AI configuration workflow and a read-only configuration check, see [runtime AI setup](docs/OFFICIAL_RUNTIME_AI.md). The development dual loop is separate from the application's runtime. Local-model tests do not establish the quality of another configured model. [Configuration and native settings verification](validation/OFFICIAL_AI_SETUP.md).
+A Windows draft helper for unfinished email or notes: provide text, organize a small next step, edit, confirm saving, and verify the saved result. No notifications or automatic sending. Reducing startup effort remains a hypothesis, not a measured benefit.
 
-Official-host inference has now been tested with the existing local deepseek-r1:7b model, without developer credentials or competition APIs. This verifies the real request path, but model quality is not accepted: a first draft contained only a placeholder, and the follow-up had mismatched evidence. The app now rejects placeholder-only drafts and continues to reject unsupported evidence.
+Current verified behavior: local-rule organization, editing, explicit save/readback, restart recovery and failure handling. Opt-in processing is limited to this app's saved source drafts, with revisions, ignore/defer and duplicate suppression. It does not inspect external mail or run a background watcher.
 
-The cumulative native control-flow/UI/file set has60 passing checks, including actual45-second timeout and late-response refusal; synthetic callbacks are clearly labeled. Real model quality, a reliable end-to-end demonstration and competition acceptance remain pending. [Actual results and next work](validation/AI_LIVE_LOCAL.md).
+The official host interfaces `model.complete` and `model.budget` are implemented. A complete OctoSense host and its configured AI provider are required. The existing local R1 test verified transport but failed output quality; successful real AI generation through confirmed save is not accepted. Synthetic response checks are labeled. Development Codex/MiniMax agents are separate from runtime AI.
 
-# Previous 0.4.0 update
+## Run on this computer
 
-An explicit AI button now calls the official host's `model.complete` interface, handles structured evidence/missing information/next step/editable draft, and keeps confirmation plus save readback. The application does not read or reuse development-agent credentials. Local rules remain a fallback.
+Open PowerShell in this repository and run:
 
-53 native UI/file checks passed across real service-error paths, synthetic callbacks and existing workflows. In the full official Windows host, the actual call returned `no_provider`; no provider-backed generation is claimed. Configure AI through the host's official AI providers settings. [Validation and limitations](validation/AI_COMPLETE.md), [privacy](PRIVACY.md).
+```powershell
+$env:OCTO_CARD_HOST='C:\Users\steam\Desktop\octo\runtime\host-repro\OctoSense-App-Hub\target\release\card-host.exe'
+& .\octocard.bat
+```
 
-# Previous 0.3.2 update
+Paste unfinished text, choose 整理草稿, edit, then 确认保存. Saved data lives under `.local-state/no-reminder-agent/`. The standalone renderer has no model service. Full-host AI configuration is described in [official setup](docs/OFFICIAL_RUNTIME_AI.md).
 
-The app now queries the official host's AI budget through `model.budget` on an explicit click. Successful budget retrieval, refusal without model permission, and actual draft saving were verified in the complete Windows host through a signed local test catalog. This is a service connection check: the app still uses local rules and does not call `model.complete`. The budget is a host call/token limit, not money or voucher balance. [Validation and limitations](validation/AI_BUDGET.md).
+For another machine, build the pinned renderer and set `OCTO_CARD_HOST` to its absolute executable path; [reproduction evidence](validation/INITIAL_DELIVERY.md) identifies the source, binary and commands. Only Windows is verified. Host binaries and credentials are not shipped.
 
-# Previous 0.3.0 update
+## Initial-round evidence
 
-Explicit opt-in app-owned draft processing with source revisions, ignore/defer and duplicate suppression is now implemented. See [observation behavior and validation](validation/OBSERVER.md). No online model or external/background observation. The earlier 0.2.0 recording below is historical.
+[Current native recording and two screenshots](demo/README.md), [delivery and remaining limitations](SUBMISSION_NOTES.md), [product brief](BRIEF.md), [privacy](PRIVACY.md), [Apache-2.0 license](LICENSE).
 
-# No-Reminder Agent 0.2.0
-
-Windows OctoSense local draft helper. Paste an unfinished email, organize, edit and confirm saving. Local keyword rules preserve the original text and add a neutral closing. Saved files are read back and restored on restart.
-
-Current runtime does not monitor email, use online models, send messages, observe in the background or learn timing. MiniMax development agents are separate from runtime behavior.
-
-## Run
-
-Set OCTO_CARD_HOST to an absolute Windows card-host.exe path, then run octocard.bat. Data defaults to .local-state. No host binary is included. Only Windows was tested.
-
-Check with: hub.exe check bundle --allow-unsigned. The development bundle is unsigned; signature-requiring hosts refuse it. Local admission does not establish official installation or competition acceptance.
-
-## Evidence
-
-Twelve native UI/file checks passed: empty start/input, unrelated text, generation, changed-source protection, save/readback, repeated save, restart, cancellation, clearing, write failure and inconsistent restore. [Results](validation/mail-mvp.json), [screenshot](bundle/screenshots/01-main.png).
-
-Tested host SHA-256: BF277982100470A5C2AE0C9E5AEA556802ED7A61ADD64432D606BA2A79DAB1EF. This identifies a local binary, not a certified competition baseline. [Current 122.5-second demonstration](demo/mail-workflow.mp4) and [recording details](demo/README.md) are available. Final submission and official acceptance remain pending.
-
-[Privacy](PRIVACY.md), [plan](DEVELOPMENT_PLAN.md), [Apache-2.0 license](LICENSE). Sole entrant nineanswerer; registration confirmed by entrant.
+Existing cumulative 60 native control/UI/file checks are not 60 real model cases. [AI validation](validation/AI_LIVE_LOCAL.md) separates real transport from failed quality. Admission and competition acceptance remain separate; no submission receipt is claimed.
