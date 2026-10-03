@@ -22,6 +22,7 @@
 | 中文使用说明 | [授权、启用与保存位置](README.zh-CN.md) |
 | 项目需求 | [核心目标与初赛最小范围](BRIEF.md) |
 | 新版本验证 | [0.5.0真实检查与合成测试的区别](validation/TASK_OBSERVER.md) |
+| 真实回环验收 | [四封测试邮件与验收步骤，尚待执行](docs/REAL_MAIL_ACCEPTANCE.md) |
 | 合成记录截图 | [原生界面，非真实AI理解证据](validation/OBSERVER_SYNTHETIC_RECORD.png) |
 | 初赛交付状态 | [待验收与待报送内容](SUBMISSION_NOTES.md) |
 | 官方 AI 配置 | [宿主、模型与配置条件](docs/OFFICIAL_RUNTIME_AI.md) |
