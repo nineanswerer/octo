@@ -1,5 +1,5 @@
 // 授权邮箱 → 宿主 AI 语义分析 → 事项存储及读回；无关键词分类器。
-let state = {schema: 1, records: [], processed: []}
+let state = {schema: 2, source: {account: "", address: "", folder: "INBOX"}, records: [], processed: []}
 let ready = false
 let observing = false
 let generation = 0
@@ -39,19 +39,47 @@ fn render_records(){
     if text.len() == 0 { ui.records_label.set_text("暂无事项；启用后由 AI 判断，不靠固定关键词") }
     else { ui.records_label.set_text(text) }
 }
+fn render_source_label(){
+    let addr = state.source.address
+    let folder = state.source.folder
+    ui.source_label.set_text("来源：" + addr + " / " + folder)
+}
 fn restore(){
     try {
         if fs.exists("observer-state.json") {
             let saved = fs.read("observer-state.json").parse_json()
-            if saved.schema != 1 || saved.records.to_json().search("[") != 0 || saved.processed.to_json().search("[") != 0 || saved.records.len() > 100 || saved.processed.len() > 100 { stop_with("记录文件异常；已保留原文件，未启用观察"); return }
+            // Validate schema/records/processed first — protect historical data.
+            if saved.schema != 1 && saved.schema != 2 { stop_with("记录文件格式异常；已保留原文件，未启用观察"); return }
+            if saved.records.to_json().search("[") != 0 || saved.processed.to_json().search("[") != 0 || saved.records.len() > 100 || saved.processed.len() > 100 { stop_with("记录文件异常；已保留原文件，未启用观察"); return }
             for r in saved.records {
-                if !is_string(r.id) || !is_string(r.account) || !is_string(r.title) || !is_string(r.deadline_text) || !is_string(r.evidence) || !is_string(r.source_sender) || !is_string(r.source_subject) || !is_string(r.source_date) || !is_string(r.uncertainty) { stop_with("记录文件异常；已保留原文件"); return }
+                if !is_string(r.id) || !is_string(r.account) || !is_string(r.title) || !is_string(r.deadline_text) || !is_string(r.evidence) || !is_string(r.source_sender) || !is_string(r.source_subject) || !is_string(r.source_date) || !is_string(r.uncertainty) { stop_with("记录文件字段异常；已保留原文件"); return }
             }
             for key in saved.processed { if !is_string(key) { stop_with("去重记录异常；已保留原文件"); return } }
-            state = saved
+            // Guard optional source object field access; normalize entirely on any failure.
+            // Uses SCRIPT-API object iteration to safely extract source field.
+            let src = {account: "", address: "", folder: "INBOX"}
+            let raw = nil
+            for k v in saved { if k == "source" { raw = v } }
+            if raw != nil && raw.to_json().search("{") == 0 {
+                let candidate_account = ""
+                let candidate_address = ""
+                let candidate_folder = ""
+                for k v in raw {
+                    if k == "account" { candidate_account = v }
+                    if k == "address" { candidate_address = v }
+                    if k == "folder" { candidate_folder = v }
+                }
+                if is_string(candidate_account) && is_string(candidate_address) && is_string(candidate_folder) {
+                    if candidate_account.trim().len() > 0 && candidate_address.trim().len() > 0 && candidate_folder == "INBOX" {
+                        src = {account: candidate_account, address: candidate_address, folder: "INBOX"}
+                    }
+                }
+            }
+            state = {schema: 2, source: src, records: saved.records, processed: saved.processed}
         }
         ready = true
         render_records()
+        render_source_label()
         ui.status_label.set_text("观察未启用；重启后需要重新授权启用")
     } catch { stop_with("读取记录失败；未覆盖已有文件") }
 }
@@ -65,6 +93,7 @@ fn persist(next){
     if !fs.exists("observer-state.json") || fs.read("observer-state.json") != raw { stop_with("保存核验失败；观察已停用"); return false }
     state = next
     render_records()
+    render_source_label()
     return true
 }
 fn analyze(account, folder, summary, msg){
@@ -107,31 +136,41 @@ fn analyze(account, folder, summary, msg){
 fn poll(){
     if !observing || pending { return }
     if state.records.len() >= 100 || state.processed.len() >= 100 { stop_with("已达100条上限；观察已停用，历史保留"); return }
+    // Verify exactly one authorized account, validate nonblank id/address and exact saved match.
+    let saved_acct = state.source.account
+    let saved_addr = state.source.address
+    let target_folder = state.source.folder
     service("mail.accounts", {}, fn(accounts){
+        if accounts.to_json().search("[") != 0 { stop_with("邮箱列表格式异常"); return }
         if accounts.len() == 0 { stop_with("没有已授权邮箱；请先连接邮箱"); return }
         if accounts.len() != 1 { stop_with("本原型仅支持一个授权邮箱；未读取邮件"); return }
         let account = accounts[0]
         if !is_string(account.id) || !is_string(account.address) { stop_with("邮箱信息异常"); return }
-        service("mail.sync", {account: account.id}, fn(sync){
-            service("mail.list", {account: account.id, offset: 0, limit: 5}, fn(list){
-                if !is_string(list.folder) || list.messages.to_json().search("[") != 0 || list.messages.len() > 5 { stop_with("邮件列表异常"); return }
+        if account.id.trim().len() == 0 || account.address.trim().len() == 0 { stop_with("邮箱账号或地址为空"); return }
+        // Validate exact saved account id/address match.
+        if account.id != saved_acct || account.address != saved_addr { stop_with("授权邮箱与保存来源不匹配；请重新授权来源"); return }
+        // Pass saved_acct and target_folder explicitly; do not rely on defaults.
+        service("mail.sync", {account: saved_acct, folder: target_folder}, fn(sync){
+            service("mail.list", {account: saved_acct, folder: target_folder, offset: 0, limit: 5}, fn(list){
+                // Reject list.folder != INBOX.
+                if !is_string(list.folder) || list.folder != target_folder { stop_with("邮件夹不匹配，只读取 INBOX"); return }
+                if list.messages.to_json().search("[") != 0 || list.messages.len() > 5 { stop_with("邮件列表异常"); return }
                 let chosen = nil
-                // 从本批较早邮件开始，先建立事项，再处理后续更新。
                 let i = list.messages.len() - 1
                 loop {
                     if i < 0 { break }
                     let message = list.messages[i]
                     if !is_string(message.id) { stop_with("邮件编号异常"); return }
-                    let key = account.id + "/" + list.folder + "/" + message.id
+                    let key = account.id + "/" + target_folder + "/" + message.id
                     let seen = false
                     for processed in state.processed { if processed == key { seen = true } }
                     if !seen { chosen = message; break }
                     i -= 1
                 }
                 if chosen == nil { ui.status_label.set_text("观察中；最近5封已处理，暂无新内容"); next_poll(); return }
-                service("mail.message", {account: account.id, folder: list.folder, message: chosen.id}, fn(msg){
+                service("mail.message", {account: saved_acct, folder: target_folder, message: chosen.id}, fn(msg){
                     if !is_string(msg.sender) || !is_string(msg.subject) || !is_string(msg.date) { stop_with("邮件出处字段异常"); return }
-                    analyze(account, list.folder, chosen, msg)
+                    analyze(account, target_folder, chosen, msg)
                 })
             })
         })
@@ -140,9 +179,24 @@ fn poll(){
 fn enable(){
     if !ready || observing || pending { return }
     generation += 1
-    observing = true
-    ui.status_label.set_text("已授权本次观察；正在检查邮箱")
-    poll()
+    ui.status_label.set_text("正在核验授权邮箱…")
+    service("mail.accounts", {}, fn(accounts){
+        if accounts.to_json().search("[") != 0 { stop_with("邮箱列表格式异常"); return }
+        if accounts.len() == 0 { stop_with("没有已授权邮箱；请先连接邮箱"); return }
+        if accounts.len() != 1 { stop_with("本原型仅支持一个授权邮箱；请确保只连接一个邮箱"); return }
+        let account = accounts[0]
+        if !is_string(account.id) || !is_string(account.address) { stop_with("邮箱信息异常，无法启用观察"); return }
+        if account.id.trim().len() == 0 || account.address.trim().len() == 0 { stop_with("邮箱账号或地址为空，无法启用观察"); return }
+        let src = {account: account.id, address: account.address, folder: "INBOX"}
+        let next = state.to_json().parse_json()
+        next.source = src
+        next.schema = 2
+        if !persist(next) { return }
+        // Only enable after successful source persistence.
+        observing = true
+        ui.status_label.set_text("已授权本次观察；正在检查邮箱")
+        poll()
+    })
 }
 fn connect(){
     stop_with("请在宿主授权页面连接邮箱；应用不收集密码")
@@ -157,6 +211,7 @@ SolidView{width: Fill height: Fill draw_bg.color: #xffffff
         ButtonFlat{text: "连接邮箱" width: Fill height: 36 on_click: || connect() draw_text +: {color: #x1c1c1e}}
         ButtonFlat{text: "启用观察与 AI 分析" width: Fill height: 36 on_click: || enable() draw_text +: {color: #x1c1c1e}}
         ButtonFlat{text: "停用观察" width: Fill height: 36 on_click: || stop_with("观察已停用；已有事项保留") draw_text +: {color: #x1c1c1e}}
+        source_label := Label{text: "来源：暂无 / INBOX" width: Fill height: Fit draw_text.text_style.font_size: 13 draw_text.color: #x1c1c1e}
         status_label := Label{text: "正在读取本地记录" width: Fill height: Fit draw_text.text_style.font_size: 13 draw_text.color: #x1c1c1e}
         records_label := Label{text: "暂无事项" width: Fill height: Fit draw_text.text_style.font_size: 14 draw_text.color: #x1c1c1e}
         Label{text: "AI 可能误判，请核对原文。仅应用打开时观察，重启默认停用；不提醒、不发送邮件。" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x666666}
