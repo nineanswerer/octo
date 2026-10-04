@@ -1,28 +1,28 @@
-{
-    "schema":  1,
-    "subtitle":  "授权观察，AI识别，自动记录",
-    "description":  "用户连接并显式启用一个邮箱后，在应用打开期间检查收件箱最近5封邮件，通过官方宿主模型判断个人事项，记录标题、截止时间原文与消息出处；后续消息可更新事项，同一邮件不重复分析。保存后读回核验。真实邮箱与模型回环待本人授权验收；不发送邮件、不提醒，不代表系统级后台观察。",
-    "category":  "productivity",
-    "keywords":  [
-                     "授权观察",
-                     "事项记录",
-                     "AI语义分析",
-                     "邮箱",
-                     "无提醒"
-                 ],
-    "icon":  "assets/icon.svg",
-    "screenshots":  [
-                        "screenshots/09-observer-source.png"
-                    ],
-    "platforms":  [
-                      "windows"
-                  ],
-    "release_notes":  "0.5.0：改为授权邮箱的AI事项观察；支持原文证据、截止时间原文、后续更新、去重和保存读回。真实邮箱及模型回环待本人授权验收。",
-    "age_rating":  "all",
-    "publisher":  {
-                      "name":  "Team 南下",
-                      "support":  "https://github.com/nineanswerer/octo/issues",
-                      "privacy_policy_url":  "https://github.com/nineanswerer/octo/blob/master/PRIVACY.md"
-                  },
-    "license":  "Apache-2.0"
-}
+{
+    "schema":  1,
+    "subtitle":  "授权观察，AI识别，自动记录",
+    "description":  "用户连接并显式启用一个邮箱后，在应用打开期间检查收件箱最近5封邮件，通过官方宿主模型判断个人事项，记录标题、截止时间原文与消息出处；后续消息可更新事项，同一邮件不重复分析。保存后读回核验。真实邮箱与模型回环待本人授权验收；不发送邮件、不提醒，不代表系统级后台观察。",
+    "category":  "productivity",
+    "keywords":  [
+                     "授权观察",
+                     "事项记录",
+                     "AI语义分析",
+                     "邮箱",
+                     "无提醒"
+                 ],
+    "icon":  "assets/icon.svg",
+    "screenshots":  [
+                        "screenshots/09-observer-source.png"
+                    ],
+    "platforms":  [
+                      "windows"
+                  ],
+    "release_notes":  "0.5.1：明确绑定唯一授权账号与 INBOX，支持旧记录迁移；29项合成原生检查及5项生产界面检查通过。真实邮箱及模型回环待本人授权验收。",
+    "age_rating":  "all",
+    "publisher":  {
+                      "name":  "Team 南下",
+                      "support":  "https://github.com/nineanswerer/octo/issues",
+                      "privacy_policy_url":  "https://github.com/nineanswerer/octo/blob/master/PRIVACY.md"
+                  },
+    "license":  "Apache-2.0"
+}
