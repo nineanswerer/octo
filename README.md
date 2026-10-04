@@ -6,6 +6,8 @@
 
 Windows 宿主邮箱凭据存储修复尚未验收，此前请勿接入私人邮箱凭据。网页登录仍在开发。当前执行顺序见[邮箱接入计划](docs/MAIL_INTEGRATION_PLAN.md)，本次验证见[0.5.1来源绑定](validation/MAIL_SOURCE.md)。
 
+已核查[十个官方仓库的更新](docs/UPSTREAM_REVIEW_2026-10-04.md)：新版宿主已有新邮件事件驱动 Agent 的参考实现，后续优先评估复用；尚未升级本机宿主或宣称真实回环完成。
+
 ## 如何使用
 
 1. 在带官方 `mail` 和 `model` 服务的完整 OctoSense 宿主中加载应用，配置可用模型。
