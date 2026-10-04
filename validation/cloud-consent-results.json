@@ -1,0 +1,103 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "default_off_no_source_calls",
+      "passed": true
+    },
+    {
+      "case": "confirmation_without_preparation_no_read",
+      "passed": true
+    },
+    {
+      "case": "prepare_checks_account_without_body_or_model",
+      "passed": true
+    },
+    {
+      "case": "consent_names_bound_address",
+      "passed": true
+    },
+    {
+      "case": "refusal_invalidates_confirmation",
+      "passed": true
+    },
+    {
+      "case": "changed_account_between_prepare_confirm_no_read",
+      "passed": true
+    },
+    {
+      "case": "changed_account_requires_new_preparation",
+      "passed": true
+    },
+    {
+      "case": "stop_clears_pending_consent",
+      "passed": true
+    },
+    {
+      "case": "restart_clears_pending_consent",
+      "passed": true
+    },
+    {
+      "case": "semantic_result_saved_with_provenance",
+      "passed": true
+    },
+    {
+      "case": "same_message_not_reanalyzed",
+      "passed": true
+    },
+    {
+      "case": "followup_updates_same_record",
+      "passed": true
+    },
+    {
+      "case": "irrelevant_does_not_create_record",
+      "passed": true
+    },
+    {
+      "case": "invented_evidence_not_saved_or_deduped",
+      "passed": true
+    },
+    {
+      "case": "invented_deadline_rejected",
+      "passed": true
+    },
+    {
+      "case": "provider_failure_stops_and_preserves_retry",
+      "passed": true
+    },
+    {
+      "case": "provider_failure_no_automatic_retry",
+      "passed": true
+    },
+    {
+      "case": "stopped_late_reply_not_saved",
+      "passed": true
+    },
+    {
+      "case": "timeout_late_reply_not_saved",
+      "passed": true
+    },
+    {
+      "case": "no_authorized_mailbox_no_analysis",
+      "passed": true
+    },
+    {
+      "case": "multiple_accounts_scope_refused",
+      "passed": true
+    },
+    {
+      "case": "restart_restores_record_default_off",
+      "passed": true
+    },
+    {
+      "case": "storage_failure_stops_without_false_record",
+      "passed": true
+    },
+    {
+      "case": "malformed_state_preserved",
+      "passed": true
+    }
+  ],
+  "synthetic_transport": true,
+  "real_model_called": false
+}

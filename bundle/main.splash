@@ -5,11 +5,62 @@ let observing = false
 let generation = 0
 let request_id = 0
 let pending = false
+let awaiting_source = nil
 fn stop_with(message){
     observing = false
     pending = false
+    awaiting_source = nil
     generation += 1
     ui.status_label.set_text(message)
+}
+fn prepare_consent(){
+    if !ready || observing || pending || awaiting_source != nil { return }
+    generation += 1
+    ui.status_label.set_text("正在核验授权邮箱…")
+    service("mail.accounts", {}, fn(accounts){
+        if accounts.to_json().search("[") != 0 { stop_with("邮箱列表格式异常"); return }
+        if accounts.len() == 0 { stop_with("没有已授权邮箱；请先连接邮箱"); return }
+        if accounts.len() != 1 { stop_with("本原型仅支持一个授权邮箱；请确保只连接一个邮箱"); return }
+        let account = accounts[0]
+        if !is_string(account.id) || !is_string(account.address) { stop_with("邮箱信息异常，无法启用观察"); return }
+        if account.id.trim().len() == 0 || account.address.trim().len() == 0 { stop_with("邮箱账号或地址为空，无法启用观察"); return }
+        let src = {account: account.id, address: account.address, folder: "INBOX"}
+        let next = state.to_json().parse_json()
+        next.source = src
+        next.schema = 2
+        if !persist(next) { return }
+        // Store prepared source; only promote to observing after explicit user confirm.
+        awaiting_source = {account: account.id, address: account.address, folder: "INBOX"}
+        ui.status_label.set_text("授权确认：最近5封邮件正文、发件人、主题、日期送宿主配置的模型，模型可能是云服务，结果有误判，应用打开期间每30秒检查，停用/重启需重新同意")
+    })
+}
+fn confirm_consent(){
+    if !ready || pending || observing { return }
+    if awaiting_source == nil { return }
+    let prepared = awaiting_source
+    awaiting_source = nil
+    let prepared_acct = prepared.account
+    let prepared_addr = prepared.address
+    if !is_string(prepared_acct) || !is_string(prepared_addr) { stop_with("准备来源格式异常；请重新启用"); return }
+    if prepared_acct.trim().len() == 0 || prepared_addr.trim().len() == 0 || prepared.folder != "INBOX" { stop_with("准备来源无效；请重新启用"); return }
+    // Revalidate: must be exactly one authorized account with exact saved match.
+    service("mail.accounts", {}, fn(accounts){
+        if accounts.to_json().search("[") != 0 { stop_with("邮箱列表格式异常"); return }
+        if accounts.len() == 0 { stop_with("没有已授权邮箱；请先连接邮箱"); return }
+        if accounts.len() != 1 { stop_with("本原型仅支持一个授权邮箱"); return }
+        let account = accounts[0]
+        if !is_string(account.id) || !is_string(account.address) { stop_with("邮箱信息异常"); return }
+        if account.id.trim().len() == 0 || account.address.trim().len() == 0 { stop_with("邮箱账号或地址为空"); return }
+        if account.id != prepared_acct || account.address != prepared_addr { stop_with("授权邮箱与准备阶段不匹配；请重新准备授权"); return }
+        if account.id != state.source.account || account.address != state.source.address { stop_with("来源邮箱已变更；请重新准备授权"); return }
+        if state.source.folder != "INBOX" { stop_with("来源邮件夹必须是 INBOX"); return }
+        observing = true
+        ui.status_label.set_text("已授权本次观察；正在检查邮箱")
+        poll()
+    })
+}
+fn refuse_consent(){
+    stop_with("已拒绝本次云分析；请重新启用并同意后开始")
 }
 fn service(name, args, callback){
     let epoch = generation
@@ -80,6 +131,7 @@ fn restore(){
         ready = true
         render_records()
         render_source_label()
+        awaiting_source = nil
         ui.status_label.set_text("观察未启用；重启后需要重新授权启用")
     } catch { stop_with("读取记录失败；未覆盖已有文件") }
 }
@@ -176,40 +228,21 @@ fn poll(){
         })
     })
 }
-fn enable(){
-    if !ready || observing || pending { return }
-    generation += 1
-    ui.status_label.set_text("正在核验授权邮箱…")
-    service("mail.accounts", {}, fn(accounts){
-        if accounts.to_json().search("[") != 0 { stop_with("邮箱列表格式异常"); return }
-        if accounts.len() == 0 { stop_with("没有已授权邮箱；请先连接邮箱"); return }
-        if accounts.len() != 1 { stop_with("本原型仅支持一个授权邮箱；请确保只连接一个邮箱"); return }
-        let account = accounts[0]
-        if !is_string(account.id) || !is_string(account.address) { stop_with("邮箱信息异常，无法启用观察"); return }
-        if account.id.trim().len() == 0 || account.address.trim().len() == 0 { stop_with("邮箱账号或地址为空，无法启用观察"); return }
-        let src = {account: account.id, address: account.address, folder: "INBOX"}
-        let next = state.to_json().parse_json()
-        next.source = src
-        next.schema = 2
-        if !persist(next) { return }
-        // Only enable after successful source persistence.
-        observing = true
-        ui.status_label.set_text("已授权本次观察；正在检查邮箱")
-        poll()
-    })
-}
 fn connect(){
     stop_with("请在宿主授权页面连接邮箱；应用不收集密码")
-    service("mail.add_account", {}, fn(account){ ui.status_label.set_text("邮箱已连接；点击启用才读取并进行 AI 分析") })
+    service("mail.add_account", {}, fn(account){ ui.status_label.set_text("邮箱已连接；请先启用核验来源，再单独同意本次云分析") })
 }
 start_timeout(0.15, || restore())
 SolidView{width: Fill height: Fill draw_bg.color: #xffffff
     ScrollYView{width: Fill height: Fill flow: Down padding: 16 spacing: 10
         Label{text: "南下 · 无提醒 Agent" draw_text.text_style.font_size: 24 draw_text.color: #x1c1c1e}
+        Label{text: "散落的承诺，自动收拢；后续的变化，持续跟上。" width: Fill height: Fit draw_text.text_style.font_size: 13 draw_text.color: #x888888}
         Label{text: "授权邮箱 → AI 判断 → 自动记录事项" width: Fill height: Fit draw_text.color: #x1c1c1e}
-        Label{text: "启用表示同意读取单一邮箱最近5封，并将正文交给宿主模型分析。" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x666666}
+        Label{text: "启用仅核验并保存来源；单独同意本次云分析后才读取邮件和调用模型。" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x666666}
         ButtonFlat{text: "连接邮箱" width: Fill height: 36 on_click: || connect() draw_text +: {color: #x1c1c1e}}
-        ButtonFlat{text: "启用观察与 AI 分析" width: Fill height: 36 on_click: || enable() draw_text +: {color: #x1c1c1e}}
+        ButtonFlat{text: "启用观察与 AI 分析" width: Fill height: 36 on_click: || prepare_consent() draw_text +: {color: #x1c1c1e}}
+        ButtonFlat{text: "同意本次云分析并开始" width: Fill height: 36 on_click: || confirm_consent() draw_text +: {color: #x1c1c1e}}
+        ButtonFlat{text: "拒绝本次分析" width: Fill height: 36 on_click: || refuse_consent() draw_text +: {color: #x1c1c1e}}
         ButtonFlat{text: "停用观察" width: Fill height: 36 on_click: || stop_with("观察已停用；已有事项保留") draw_text +: {color: #x1c1c1e}}
         source_label := Label{text: "来源：暂无 / INBOX" width: Fill height: Fit draw_text.text_style.font_size: 13 draw_text.color: #x1c1c1e}
         status_label := Label{text: "正在读取本地记录" width: Fill height: Fit draw_text.text_style.font_size: 13 draw_text.color: #x1c1c1e}
