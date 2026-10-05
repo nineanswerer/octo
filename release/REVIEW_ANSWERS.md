@@ -1,5 +1,7 @@
 # 外环对hub scan的人工回答
 
+> 此文件是 0.4.1 历史记录。当前 0.5.3 候选包回答见 [build/REVIEW-ANSWERS.md](../build/REVIEW-ANSWERS.md)，不要使用下文审核当前包。
+
 本记录为Codex对0.4.1包的审查，不是App Hub批准。
 
 1. main.splash标题与说明限定用户提供文本、编辑草稿和确认保存，不读取或发送邮件。整理/保存真实可用；listing的AI接口存在但结果质量未验收，release_notes明确说明失败，不能宣传为可靠AI产品。

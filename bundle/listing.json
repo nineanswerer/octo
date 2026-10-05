@@ -12,7 +12,8 @@
                  ],
     "icon":  "assets/icon.svg",
     "screenshots":  [
-                        "screenshots/09-observer-source.png"
+                        "screenshots/10-production-053-empty.png",
+                        "screenshots/11-production-053-service-error.png"
                     ],
     "platforms":  [
                       "windows"
