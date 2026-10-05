@@ -1,0 +1,129 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "default_off_no_source_calls",
+      "passed": true
+    },
+    {
+      "case": "semantic_result_saved_with_provenance",
+      "passed": true
+    },
+    {
+      "case": "same_message_not_reanalyzed",
+      "passed": true
+    },
+    {
+      "case": "followup_updates_same_record",
+      "passed": true
+    },
+    {
+      "case": "update_retains_prior_deadline_evidence",
+      "passed": true
+    },
+    {
+      "case": "history_visible_in_native_ui",
+      "passed": true,
+      "actual": {
+        "i": "records_label",
+        "ty": "Label",
+        "r": [
+          19,
+          624,
+          374,
+          268
+        ],
+        "w": 0,
+        "window_id": "main_window",
+        "enabled": true,
+        "t": "状态：待处理\n交稿\n截止原文：明天中午\n证据：交稿改为明天中午。\n出处：编辑 / 稿件 / 2026-10-03T09:00:00+08:00\n待核实：相对日期，请核对邮件日期\n\n历史快照：交稿\n截止原文：今天晚上6点前\n证据：今天晚上6点前交稿。\n出处：编辑 / 稿件 / 2026-10-03T09:00:00+08:00\n待核实：相对日期，请核对邮件日期\n\n"
+      }
+    },
+    {
+      "case": "history_limit_preserves_active_record",
+      "passed": true
+    },
+    {
+      "case": "cancel_same_id_preserves_title_deadline",
+      "passed": true
+    },
+    {
+      "case": "cancel_retains_both_prior_sources",
+      "passed": true
+    },
+    {
+      "case": "cancel_not_displayed_as_completed",
+      "passed": true
+    },
+    {
+      "case": "cancel_cannot_automatically_reactivate",
+      "passed": true
+    },
+    {
+      "case": "cancel_and_history_survive_restart",
+      "passed": true
+    },
+    {
+      "case": "legacy_record_cancel_migrates_without_recursive_history",
+      "passed": true
+    },
+    {
+      "case": "malformed_status_preserved",
+      "passed": true
+    },
+    {
+      "case": "malformed_history_preserved",
+      "passed": true
+    },
+    {
+      "case": "irrelevant_does_not_create_record",
+      "passed": true
+    },
+    {
+      "case": "invented_evidence_not_saved_or_deduped",
+      "passed": true
+    },
+    {
+      "case": "invented_deadline_rejected",
+      "passed": true
+    },
+    {
+      "case": "provider_failure_stops_and_preserves_retry",
+      "passed": true
+    },
+    {
+      "case": "provider_failure_no_automatic_retry",
+      "passed": true
+    },
+    {
+      "case": "stopped_late_reply_not_saved",
+      "passed": true
+    },
+    {
+      "case": "timeout_late_reply_not_saved",
+      "passed": true
+    },
+    {
+      "case": "no_authorized_mailbox_no_analysis",
+      "passed": true
+    },
+    {
+      "case": "multiple_accounts_scope_refused",
+      "passed": true
+    },
+    {
+      "case": "restart_restores_record_default_off",
+      "passed": true
+    },
+    {
+      "case": "storage_failure_stops_without_false_record",
+      "passed": true
+    },
+    {
+      "case": "malformed_state_preserved",
+      "passed": true
+    }
+  ],
+  "synthetic_transport": true,
+  "real_model_called": false
+}

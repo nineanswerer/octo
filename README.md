@@ -1,8 +1,12 @@
 # 南下 · 无提醒 Agent
 
+**初赛交付入口：[0.5.3演示与关键截图](demo/INITIAL_0.5.3.md) · [固定版本与提交记录](SUBMISSION_NOTES.md) · [中文使用说明](README.zh-CN.md)。** 视频约2分6秒，明确标注合成邮件和预设模型响应；真实邮箱/在线AI回环尚待验收。
+
+最新开发版本 **0.5.3**：更新时保留变更前原文与出处，取消保留原事项并明确“取消不代表完成”；历史满时停止写入。27项合成原生及5项生产界面检查通过，[验证与限制](validation/COMMITMENT_CHANGES.md)。真实语义关联、乱序、用户纠正和真实邮箱回环仍待完成。下方0.5.2授权说明继续适用；App Hub审核仍固定v0.5.1。
+
 **让 AI 从授权来源主动识别需要记录的事，而不是由人逐条创建待办。**例如邮件说“今天晚上6点前交稿”，AI判断是否与你有关，记录事项、截止时间原文与出处；后续说“改成明天中午”，更新同一事项。
 
-当前开发候选 **0.5.2：单独确认云分析，纯 OctoScript 应用**。已实现邮箱与模型请求、事项保存读回、更新、去重及账号绑定；先准备来源，再明确同意本次分析，确认前重新核对账号。24项合成原生检查及5项生产界面检查通过；**真实邮箱与真实模型的完整回环尚待本人授权验收，不能称为已完成。** [本次证据](validation/CLOUD_CONSENT.md)。App Hub [#74](https://github.com/OctoSense-org/OctoSense-App-Hub/issues/74)提交的固定版本仍为0.5.1，尚待审核。
+0.5.3沿用 **0.5.2的单独云分析确认机制，纯 OctoScript 应用**。已实现邮箱与模型请求、事项保存读回、更新、去重及账号绑定；先准备来源，再明确同意本次分析，确认前重新核对账号。24项合成原生检查及5项生产界面检查通过；**真实邮箱与真实模型的完整回环尚待本人授权验收，不能称为已完成。** [本次证据](validation/CLOUD_CONSENT.md)。App Hub [#74](https://github.com/OctoSense-org/OctoSense-App-Hub/issues/74)提交的固定版本仍为0.5.1，尚待审核。
 
 Windows 宿主邮箱凭据存储修复尚未验收，此前请勿接入私人邮箱凭据。网页登录仍在开发。当前执行顺序见[邮箱接入计划](docs/MAIL_INTEGRATION_PLAN.md)，本次验证见[0.5.1来源绑定](validation/MAIL_SOURCE.md)。
 
@@ -28,7 +32,7 @@ Windows 宿主邮箱凭据存储修复尚未验收，此前请勿接入私人邮
 | 新版本验证 | [0.5.0真实检查与合成测试的区别](validation/TASK_OBSERVER.md) |
 | 真实回环验收 | [四封测试邮件与验收步骤，尚待执行](docs/REAL_MAIL_ACCEPTANCE.md) |
 | 合成记录截图 | [原生界面，非真实AI理解证据](validation/OBSERVER_SYNTHETIC_RECORD.png) |
-| 初赛交付状态 | [待验收与待报送内容](SUBMISSION_NOTES.md) |
+| 初赛交付状态 | [固定版本、实际提交与未验收内容](SUBMISSION_NOTES.md) |
 | 官方 AI 配置 | [宿主、模型与配置条件](docs/OFFICIAL_RUNTIME_AI.md) |
 | 宿主复现 | [构建记录](validation/INITIAL_DELIVERY.md) |
 | 开发计划 | [赛制节点与当前优先级](DEVELOPMENT_PLAN.md) |
@@ -37,4 +41,4 @@ Windows 宿主邮箱凭据存储修复尚未验收，此前请勿接入私人邮
 | 旧版冻结记录 | [0.4.1文件指纹](release/INITIAL_FREEZE.json) |
 | 开源许可 | [Apache-2.0](LICENSE) |
 
-旧草稿原型保留在 [`v0.4.1-initial`](https://github.com/nineanswerer/octo/tree/v0.4.1-initial)，未覆盖标签。当前开发代码与旧录像不能混作同版本证据。没有正式初赛或 App Hub 接收回执。
+旧草稿原型保留在 [`v0.4.1-initial`](https://github.com/nineanswerer/octo/tree/v0.4.1-initial)，未覆盖标签。当前开发代码与旧录像不能混作同版本证据。初赛仓库地址已在官方赛事[#13评论区](https://github.com/gosimfoundation/hackathon-agenticapp26/issues/13#issuecomment-5947691976)报送；App Hub #74已递交但待审核，不代表赛事通过。

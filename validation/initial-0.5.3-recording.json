@@ -1,0 +1,103 @@
+{
+  "version": "0.5.3",
+  "passed": true,
+  "cases": [
+    {
+      "case": "01-production-empty",
+      "passed": true,
+      "status": "观察未启用；重启后需要重新授权启用"
+    },
+    {
+      "case": "02-production-missing-service",
+      "passed": true,
+      "status": "服务不可用：no service answers \"mail\" on this device；观察已停用"
+    },
+    {
+      "case": "03-synthetic-consent",
+      "passed": true,
+      "status": "授权确认：最近5封邮件正文、发件人、主题、日期送宿主配置的模型，模型可能是云服务，结果有误判，应用打开期间每30秒检查，停用/重启需重新同意"
+    },
+    {
+      "case": "04-synthetic-created",
+      "passed": true,
+      "status": "观察已停用；已有事项保留"
+    },
+    {
+      "case": "05-synthetic-updated",
+      "passed": true,
+      "status": "观察已停用；已有事项保留"
+    },
+    {
+      "case": "06-synthetic-cancelled",
+      "passed": true,
+      "status": "观察已停用；已有事项保留"
+    },
+    {
+      "case": "07-synthetic-model-failure",
+      "passed": true,
+      "status": "服务不可用：no_provider: no configured runtime model；观察已停用"
+    },
+    {
+      "case": "08-synthetic-restart",
+      "passed": true,
+      "status": "观察未启用；重启后需要重新授权启用"
+    }
+  ],
+  "scenes": [
+    {
+      "name": "01-production-empty",
+      "frame_start": 1,
+      "seconds": 15,
+      "status": "观察未启用；重启后需要重新授权启用"
+    },
+    {
+      "name": "02-production-missing-service",
+      "frame_start": 31,
+      "seconds": 15,
+      "status": "服务不可用：no service answers \"mail\" on this device；观察已停用"
+    },
+    {
+      "name": "03-synthetic-consent",
+      "frame_start": 64,
+      "seconds": 15,
+      "status": "授权确认：最近5封邮件正文、发件人、主题、日期送宿主配置的模型，模型可能是云服务，结果有误判，应用打开期间每30秒检查，停用/重启需重新同意"
+    },
+    {
+      "name": "04-synthetic-created",
+      "frame_start": 95,
+      "seconds": 15,
+      "status": "观察已停用；已有事项保留"
+    },
+    {
+      "name": "05-synthetic-updated",
+      "frame_start": 127,
+      "seconds": 15,
+      "status": "观察已停用；已有事项保留"
+    },
+    {
+      "name": "06-synthetic-cancelled",
+      "frame_start": 160,
+      "seconds": 15,
+      "status": "观察已停用；已有事项保留"
+    },
+    {
+      "name": "07-synthetic-model-failure",
+      "frame_start": 192,
+      "seconds": 15,
+      "status": "服务不可用：no_provider: no configured runtime model；观察已停用"
+    },
+    {
+      "name": "08-synthetic-restart",
+      "frame_start": 223,
+      "seconds": 15,
+      "status": "观察未启用；重启后需要重新授权启用"
+    }
+  ],
+  "frame_count": 253,
+  "fps": 2,
+  "real_model_called": false,
+  "private_mail_used": false,
+  "synthetic_transport": true,
+  "production_source_sha256": "b9a6d62a61eff0cbdd4bce2735d617d0cf779aa0fe550e94065bc8b8af0b9e2e",
+  "capture_errors": 2
+}
