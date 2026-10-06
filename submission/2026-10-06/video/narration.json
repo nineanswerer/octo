@@ -1,0 +1,50 @@
+[
+  {
+    "start": 0,
+    "end": 15,
+    "text": "南下：从授权邮件主动识别需要记录的事。启动默认停用。",
+    "screenshot": "01-production-empty.png"
+  },
+  {
+    "start": 15,
+    "end": 31.5,
+    "text": "生产包缺少邮箱服务时明确失败，不伪造记录。",
+    "screenshot": "02-production-missing-service.png"
+  },
+  {
+    "start": 31.5,
+    "end": 47,
+    "text": "以下为合成邮件与预设模型响应；先核验来源，再单独同意云分析。",
+    "screenshot": "03-synthetic-consent.png"
+  },
+  {
+    "start": 47,
+    "end": 63,
+    "text": "邮件说今天晚上六点前交稿，记录事项、期限原文和证据，保存并读回。",
+    "screenshot": "04-synthetic-created.png"
+  },
+  {
+    "start": 63,
+    "end": 79.5,
+    "text": "后续改期为明天中午：更新同一事项，保留历史。",
+    "screenshot": "05-synthetic-updated.png"
+  },
+  {
+    "start": 79.5,
+    "end": 95.5,
+    "text": "收到取消：保留原事项，取消不代表完成。",
+    "screenshot": "06-synthetic-cancelled.png"
+  },
+  {
+    "start": 95.5,
+    "end": 111,
+    "text": "模型服务失败时停止观察，不把失败请求当作已处理。",
+    "screenshot": "07-synthetic-model-failure.png"
+  },
+  {
+    "start": 111,
+    "end": 126.5,
+    "text": "重启恢复记录，观察默认停用。真实邮箱和在线模型完整回环仍待验收。",
+    "screenshot": "08-synthetic-restart.png"
+  }
+]

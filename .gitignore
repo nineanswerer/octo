@@ -1,3 +1,8 @@
 # 不提交派生数据
 .local-state/
 .makepad-remote/
+# 内部参考与开发研究只留工作区，不属于作品交付
+/knowledge/
+/runtime/
+/docs/*COMPARISON*.md
+/docs/UPSTREAM_REVIEW*.md
