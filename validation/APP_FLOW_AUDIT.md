@@ -22,3 +22,7 @@ runtime/host-repro/OctoSense-App-Hub/target/release/hub.exe scan git-repo/bundle
 本次只改截图索引、包摘要及审核文档，未改应用源码。截图来自 INITIAL-053-RECORDING-001 已保存的原生捕获，无重新模拟在线模型。
 
 测试入口优先考虑 Makepad Studio；已有 card-host 的 Makepad 远程调试接口也可启动、点击、查看帧与状态，官方 Flow 正是允许此路径，不要求 Computer Use。本次未声称已经通过 Studio 启动或完成完整宿主服务测试。下一步应在具备官方 mail/model 服务且凭据存储安全的完整宿主，验证真实 create/update/cancel 和失败/重启；避免新增无关功能。
+
+## 2026-10-06 真实回环补充
+
+以上表格保留10月5日核查历史。当前0.5.4已通过5封真实QQ测试邮件与在线模型的创建、改期、忽略、取消、独立事项回环，以及停用和重启保存核验。修复经27项合成原生回归；重新stamp/check通过（仅未签名警告），scan生成当前源码审核包。[真实验收](REAL_MAIL_0.5.4.md)。真实业务截图、全新环境复现和官方审批仍不能据此宣称完成。

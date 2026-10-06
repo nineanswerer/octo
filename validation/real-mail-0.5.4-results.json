@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-06",
+  "version": "0.5.4",
+  "verification": "real QQ test mailbox through official host mail service; configured MiniMax-M3 at api.minimax.cn through official model service",
+  "synthetic_transport": false,
+  "test_message_content": "invented acceptance messages delivered to the test mailbox itself",
+  "real_model_calls": true,
+  "fallback_count": 0,
+  "checks": {
+    "five_test_messages_processed": true,
+    "two_records_only": true,
+    "create_then_update_same_record": true,
+    "cancel_retains_two_history_entries": true,
+    "cancel_is_not_completion": true,
+    "unrelated_message_created_no_record": true,
+    "independent_material_kept_separate": true,
+    "saved_state_unchanged_after_restart": true,
+    "restart_observation_default_off": true
+  },
+  "source_main_sha256": "fd2700d2bd2d0a4158606f5152eeebc2f5cecc3e6b78d62b3cc56cc26671d1aa",
+  "host_binary_sha256": "29d9bf60fa3bf8b9686785976e3a3f69a5c50937ed4c74ae229b85cdd3110ec1",
+  "host_source_base": "cf85350129830605d08973befdd8bde6480f6a77 with local Windows encrypted-mail-vault patch",
+  "limitations": [
+    "Controlled five-message acceptance only; model decisions are not guaranteed for arbitrary mail.",
+    "No real-account screenshots, credentials, email identifiers or raw model/mail payloads are published.",
+    "Full App Flow visual evidence and official competition/App Hub acceptance are separate.",
+    "Frozen initial tag remains unchanged."
+  ],
+  "prior_failure": "0.5.3 safely rejected a nonexistent record reference on cancellation; 0.5.4 constrains record_id to existing ids and retains exact-id validation."
+}

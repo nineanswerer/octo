@@ -6,11 +6,11 @@
 
 **[作品演示、截图和应用包下载](submission/2026-10-06/README.md)** · [中文使用说明](README.zh-CN.md) · [需求与范围](BRIEF.md)
 
-当前 **0.5.3，纯 OctoScript**，使用官方宿主mail/model/storage服务。只观察一个邮箱最近5封，应用打开时每30秒检查，重启默认停用。先核验来源，再单独同意云分析；不发送邮件、不弹提醒、不扫描其他应用。
+当前 **0.5.4，纯 OctoScript**，使用官方宿主mail/model/storage服务。只观察一个邮箱最近5封，应用打开时每30秒检查，重启默认停用。先核验来源，再单独同意云分析；不发送邮件、不弹提醒、不扫描其他应用。
 
 ## 当前验证
 
-27项合成原生业务检查、5项生产界面检查及8项录像检查通过。正常业务演示使用合成邮件和预设模型响应，已明确标注；**真实邮箱与在线模型完整业务回环尚未验收。** [验证与限制](validation/COMMITMENT_CHANGES.md) · [App Flow对照](validation/APP_FLOW_AUDIT.md)。
+27项合成原生业务检查、5项生产界面检查及8项录像检查通过。正常业务演示使用合成邮件和预设模型响应，已明确标注；**0.5.4 已完成真实 QQ 测试邮箱与在线 MiniMax 模型的5封受控业务回环：创建、改期、忽略他人事项、取消、独立新事项；重启保留记录并默认停用。** [真实回环结果](validation/real-mail-0.5.4-results.json)。任意邮件的识别质量及官方审核不由这次测试保证。 [验证与限制](validation/COMMITMENT_CHANGES.md) · [App Flow对照](validation/APP_FLOW_AUDIT.md)。
 
 ## 运行
 
