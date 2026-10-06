@@ -1,8 +1,8 @@
 # 初赛0.5.3原生演示
 
-[播放视频](initial-0.5.3.mp4) · [改期与历史截图](screenshots/initial-0.5.3-updated.png) · [模型失败截图](screenshots/initial-0.5.3-failure.png) · [生产包缺服务截图](screenshots/initial-0.5.3-production.png)
+[播放视频](initial-0.5.3.mp4) · [改期与历史截图](../submission/2026-10-06/screenshots/05-synthetic-updated.png) · [模型失败截图](../submission/2026-10-06/screenshots/07-synthetic-model-failure.png) · [生产包缺服务截图](../submission/2026-10-06/screenshots/02-production-missing-service.png)
 
-2026-10-05采集，约126.5秒，无音轨，带中文界面说明。连续采集Windows原生card-host实际画面，每秒2帧，编码H.264每秒12帧；重启瞬间保留最后画面。对应本仓库0.5.3应用源码，生产包SHA256和测试改动见[采集记录](../validation/initial-0.5.3-recording.json)，最终固定标签见[文件指纹](../release/INITIAL_0.5.3.json)。
+2026-10-05采集，约126.5秒，无音轨，带中文界面说明。连续采集Windows原生card-host实际画面，每秒2帧，编码H.264每秒12帧；重启瞬间保留最后画面。对应本仓库0.5.3应用源码，生产包SHA256和测试改动见[采集记录](../validation/initial-0.5.3-recording.json)，最终固定标签见[文件指纹](https://github.com/nineanswerer/octo/blob/v0.5.3-initial/release/INITIAL_0.5.3.json)。
 
 ## 看什么
 
@@ -23,10 +23,10 @@
 
 真实邮箱授权与在线模型完整回环、语义质量仍待验收；本录像不能代替这些工作。正式运行需要带官方mail/model服务的完整宿主，[使用说明](../README.zh-CN.md)。独立渲染器仅展示界面和缺服务失败。
 
-可复验采集脚本在tools/repro/；在本仓库内按[宿主构建记录](../validation/BUILD_HOST.md)准备runtime/host-repro对应的四个官方源码目录并构建hub/card-host，然后运行：
+可复验采集脚本在tools/repro/；在本仓库内按[宿主构建记录](../docs/RUNNING.md)准备runtime/host-repro对应的四个官方源码目录并构建hub/card-host，然后运行：
 
 ```powershell
 python tools/repro/record_commitment_demo.py --bundle bundle --output runtime/initial-053-repro --host runtime/host-repro/OctoSense-App-Hub/target/release/card-host.exe
 ```
 
-输出目录必须是新的隔离目录；不要覆盖已有用户数据。脚本仅使用Python标准库并生成PNG帧及检查结果。用FFmpeg按2帧/秒输入编码即可生成视频。旧0.4.1及更早录像仅为历史。
+输出目录必须是新的隔离目录；不要覆盖已有用户数据。脚本仅使用Python标准库并生成PNG帧及检查结果。用FFmpeg按2帧/秒输入编码即可生成视频。

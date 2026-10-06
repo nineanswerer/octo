@@ -6,3 +6,6 @@
 /runtime/
 /docs/*COMPARISON*.md
 /docs/UPSTREAM_REVIEW*.md
+/DEVELOPMENT_PLAN.md
+/NEXT_STAGE_PLAN.md
+/GATE_STATUS.md

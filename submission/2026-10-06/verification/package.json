@@ -1,5 +1,6 @@
 {
-  "source_commit": "5960702f933c63d5e53f24c80ddf7e78e16a34cc",
+  "application_source_commit": "5960702f933c63d5e53f24c80ddf7e78e16a34cc",
+  "bundle_revision": "current master material curation; old unused screenshots removed and restamped",
   "bundle_exact_bytes_verified": true,
   "video_decode": "PASS",
   "real_mail_online_model": "NOT_VERIFIED",

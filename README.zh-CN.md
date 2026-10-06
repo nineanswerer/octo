@@ -12,4 +12,4 @@
 
 只支持一个授权邮箱，应用打开时每30秒检查，最近5封之外可能遗漏；记录/去重各100条满后停止。不发送邮件、不提醒、不进行全系统扫描。
 
-[首页](README.md) · [当前验证与限制](validation/TASK_OBSERVER.md) · [官方AI配置](docs/OFFICIAL_RUNTIME_AI.md) · [隐私](PRIVACY.md)。真实邮箱与模型完整回环尚待本人授权验收。
+[首页](README.md) · [当前验证与限制](validation/COMMITMENT_CHANGES.md) · [官方AI配置](docs/OFFICIAL_RUNTIME_AI.md) · [隐私](PRIVACY.md)。真实邮箱与模型完整回环尚待本人授权验收。

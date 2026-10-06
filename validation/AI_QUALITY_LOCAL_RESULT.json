@@ -1,7 +1,0 @@
-{
-  "paid_completion_requested": false,
-  "passed": false,
-  "application_version": "0.4.1",
-  "observed_status": "AI 证据与原文不符；请重新点击按钮或编辑原文",
-  "error": "Live local model not accepted: AI 证据与原文不符；请重新点击按钮或编辑原文"
-}
