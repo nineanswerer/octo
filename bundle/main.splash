@@ -27,7 +27,7 @@ fn safe_old_snapshot(r){
         for k v in r { if k == "recorded_at" { tsraw = v } }
         if is_number(tsraw) { ts = tsraw }
     }
-    return {
+    let rec = {
         id: safe_str(r, "id", ""),
         account: safe_str(r, "account", ""),
         title: safe_str(r, "title", ""),
@@ -41,12 +41,26 @@ fn safe_old_snapshot(r){
         recorded_at: ts,
         status: status_of(r)
     }
+    // Preserve optional review fields so next AI update stores complete history with review
+    let raw_rk = nil
+    let raw_rn = nil
+    let raw_ra = nil
+    for k v in r {
+        if k == "review_kind" { raw_rk = v }
+        if k == "review_note" { raw_rn = v }
+        if k == "reviewed_at" { raw_ra = v }
+    }
+    if is_string(raw_rk) { rec.review_kind = raw_rk }
+    if is_string(raw_rn) { rec.review_note = raw_rn }
+    if is_number(raw_ra) { rec.reviewed_at = raw_ra }
+    return rec
 }
 fn validate_history(hist){
     if hist.to_json().search("[") != 0 { return false }
     if hist.len() > 20 { return false }
     for snapshot in hist {
         if snapshot.to_json().search("{") != 0 { return false }
+        if !validate_review_metadata(snapshot) { return false }
         for field in ["id", "account", "title", "deadline_text", "evidence", "uncertainty", "source_key", "source_sender", "source_subject", "source_date"] {
             let found = false
             for k v in snapshot {
@@ -71,10 +85,32 @@ fn validate_history(hist){
             }
         }
         if !has_time || !has_status { return false }
+        // Historical snapshots: if any review field present, all three must be present and valid
+        let hk_seen = false
+        let hn_seen = false
+        let ha_seen = false
+        for k v in snapshot {
+            if k == "review_kind" {
+                if !is_string(v) || (v != "confirmed" && v != "corrected") { return false }
+                hk_seen = true
+            }
+            if k == "review_note" {
+                if !is_string(v) { return false }
+                hn_seen = true
+            }
+            if k == "reviewed_at" {
+                if !is_number(v) { return false }
+                ha_seen = true
+            }
+        }
+        if hk_seen && (!hn_seen || !ha_seen) { return false }
+        if hn_seen && (!hk_seen || !ha_seen) { return false }
+        if ha_seen && (!hk_seen || !hn_seen) { return false }
     }
     return true
 }
 fn validate_optional_record_fields(r){
+    if !validate_review_metadata(r) { return false }
     for k v in r {
         if k == "status" { if !is_string(v) || (v != "active" && v != "cancelled") { return false } }
         if k == "history" { if !validate_history(v) { return false } }
@@ -89,12 +125,209 @@ let generation = 0
 let request_id = 0
 let pending = false
 let awaiting_source = nil
+// Review flow state
+let review_idx = -1
+let review_note = ""
+let review_detail = nil
 fn stop_with(message){
     observing = false
     pending = false
     awaiting_source = nil
+    review_idx = -1
+    review_note = ""
+    review_detail = nil
     generation += 1
     ui.status_label.set_text(message)
+}
+// Review helpers
+fn review_note_for(r){
+    let note = ""
+    let reviewed_at = 0
+    let kind = ""
+    let raw_note = nil
+    let raw_reviewed_at = nil
+    let raw_kind = nil
+    for k v in r {
+        if k == "review_note" { raw_note = v }
+        if k == "reviewed_at" { raw_reviewed_at = v }
+        if k == "review_kind" { raw_kind = v }
+    }
+    if is_string(raw_note) { note = raw_note }
+    if is_number(raw_reviewed_at) { reviewed_at = raw_reviewed_at }
+    if is_string(raw_kind) { kind = raw_kind }
+    return {note: note, reviewed_at: reviewed_at, kind: kind}
+}
+fn has_review(r){
+    let info = review_note_for(r)
+    if info.kind == "confirmed" || info.kind == "corrected" { return true }
+    return false
+}
+fn current_reviewed_record(){
+    if review_idx < 0 || review_idx >= state.records.len() { return nil }
+    return state.records[review_idx]
+}
+fn select_review_record(idx){
+    if idx < 0 || idx >= state.records.len() { return }
+    review_idx = idx
+    review_note = ""
+    let r = state.records[idx]
+    let info = review_note_for(r)
+    review_note = info.note
+    review_detail = {
+        id: safe_str(r, "id", ""),
+        title: safe_str(r, "title", ""),
+        deadline_text: safe_str(r, "deadline_text", ""),
+        evidence: safe_str(r, "evidence", ""),
+        source_sender: safe_str(r, "source_sender", ""),
+        source_subject: safe_str(r, "source_subject", ""),
+        source_date: safe_str(r, "source_date", ""),
+        status: status_of(r),
+        history: safe_str(r, "history", "[]"),
+        reviewed_kind: info.kind,
+        reviewed_note: info.note,
+        reviewed_at: info.reviewed_at
+    }
+}
+fn save_review(kind, note){
+    if !ready || observing || pending || awaiting_source != nil {
+        ui.status_label.set_text("请先停用观察并结束授权或请求，再核对事项")
+        return false
+    }
+    if review_idx < 0 || review_idx >= state.records.len() { return false }
+    if kind != "confirmed" && kind != "corrected" { return false }
+    let trimmed = note.trim()
+    if kind == "corrected" && trimmed.len() == 0 {
+        ui.status_label.set_text("修正备注不能为空")
+        return false
+    }
+    if trimmed.len() > 300 {
+        ui.status_label.set_text("备注超过300字，请精简")
+        return false
+    }
+    let next = state.to_json().parse_json()
+    let index = review_idx
+    let current = state.records[index]
+    let updated = next.records[index]
+    if updated.id != current.id || updated.account != current.account { return false }
+    updated.review_kind = kind
+    updated.review_note = trimmed
+    updated.reviewed_at = time_now()
+    next.records[index] = updated
+    try {
+        if !persist(next) { return false }
+    } catch {
+        stop_with("保存失败；观察已停用，未报告核对成功")
+        return false
+    }
+    review_note = trimmed
+    review_detail = nil
+    render_review_detail()
+    if kind == "confirmed" { ui.status_label.set_text("已确认事项（确认不代表完成）") }
+    else { ui.status_label.set_text("已保存修正备注") }
+    return true
+}
+fn validate_review_metadata(r){
+    let kind = nil
+    let note = nil
+    let timestamp = nil
+    let count = 0
+    for k v in r {
+        if k == "review_kind" { kind = v; count += 1 }
+        if k == "review_note" { note = v; count += 1 }
+        if k == "reviewed_at" { timestamp = v; count += 1 }
+    }
+    if count == 0 { return true }
+    if count != 3 { return false }
+    if !is_string(kind) || !is_string(note) || !is_number(timestamp) { return false }
+    if timestamp <= 0 || note.len() > 300 { return false }
+    if kind != "confirmed" && kind != "corrected" { return false }
+    if kind == "corrected" && note.trim().len() == 0 { return false }
+    return true
+}
+// Review navigation and actions
+fn can_review(){
+    if !ready { return false }
+    if observing || pending || awaiting_source != nil { return false }
+    if state.records.len() == 0 { return false }
+    return true
+}
+fn review_prev(){
+    if !can_review() { return }
+    if state.records.len() == 0 { return }
+    let target = review_idx - 1
+    if target < 0 { target = state.records.len() - 1 }
+    select_review_record(target)
+    render_review_detail()
+    if ui.review_note_input != nil { ui.review_note_input.set_text("") }
+    review_note = ""
+}
+fn review_next(){
+    if !can_review() { return }
+    if state.records.len() == 0 { return }
+    let target = review_idx + 1
+    if target >= state.records.len() { target = 0 }
+    select_review_record(target)
+    render_review_detail()
+    if ui.review_note_input != nil { ui.review_note_input.set_text("") }
+    review_note = ""
+}
+fn confirm_record(){
+    if !can_review() { return }
+    if review_idx < 0 { return }
+    let raw = ""
+    if ui.review_note_input != nil { raw = ui.review_note_input.text() }
+    let note = raw.trim()
+    if note.len() > 300 { ui.status_label.set_text("备注过长（限300字）"); return }
+    save_review("confirmed", note)
+}
+fn correct_record(){
+    if !can_review() { return }
+    if review_idx < 0 { return }
+    let raw = ""
+    if ui.review_note_input != nil { raw = ui.review_note_input.text() }
+    let note = raw.trim()
+    if note.len() == 0 { ui.status_label.set_text("修正备注不能为空"); return }
+    if note.len() > 300 { ui.status_label.set_text("备注过长（限300字）"); return }
+    save_review("corrected", note)
+}
+fn render_review_detail(){
+    if !can_review() {
+        if ui.review_panel != nil { ui.review_panel.set_visible(false) }
+        return
+    }
+    if review_idx < 0 || review_idx >= state.records.len() {
+        if ui.review_panel != nil { ui.review_panel.set_visible(false) }
+        return
+    }
+    let r = state.records[review_idx]
+    let info = review_note_for(r)
+    if ui.review_panel == nil { return }
+    ui.review_panel.set_visible(true)
+    if ui.review_title != nil { ui.review_title.set_text(safe_str(r, "title", "(无标题)")) }
+    if ui.review_deadline != nil { ui.review_deadline.set_text(safe_str(r, "deadline_text", "(无)")) }
+    if ui.review_evidence != nil { ui.review_evidence.set_text(safe_str(r, "evidence", "")) }
+    if ui.review_sender != nil { ui.review_sender.set_text(safe_str(r, "source_sender", "")) }
+    if ui.review_subject != nil { ui.review_subject.set_text(safe_str(r, "source_subject", "")) }
+    if ui.review_date != nil { ui.review_date.set_text(safe_str(r, "source_date", "")) }
+    if ui.review_status != nil { ui.review_status.set_text("状态：" + status_of(r)) }
+    // Show full history text via existing render_history (includes historical review labels)
+    if ui.review_history_label != nil {
+        let raw_hist = nil
+        for k v in r { if k == "history" { raw_hist = v } }
+        if raw_hist != nil && raw_hist.to_json().search("[") == 0 && raw_hist.len() > 0 {
+            let hist_text = render_history(r)
+            ui.review_history_label.set_text(hist_text)
+            ui.review_history_label.set_visible(true)
+        } else { ui.review_history_label.set_visible(false) }
+    }
+    if ui.review_past_label != nil {
+        if info.kind != "" {
+            let ts = ""
+            if is_number(info.reviewed_at) { ts = info.reviewed_at.to_string() }
+            ui.review_past_label.set_text("本次审查：" + info.kind + " | " + ts + " | " + info.note)
+            ui.review_past_label.set_visible(true)
+        } else { ui.review_past_label.set_visible(false) }
+    }
 }
 fn prepare_consent(){
     if !ready || observing || pending || awaiting_source != nil { return }
@@ -114,7 +347,7 @@ fn prepare_consent(){
         if !persist(next) { return }
         // Store prepared source; only promote to observing after explicit user confirm.
         awaiting_source = {account: account.id, address: account.address, folder: "INBOX"}
-        ui.status_label.set_text("授权确认：最近5封邮件正文、发件人、主题、日期送宿主配置的模型，模型可能是云服务，结果有误判，应用打开期间每30秒检查，停用/重启需重新同意")
+        ui.status_label.set_text("授权确认：最近5封邮件正文、发件人、主题、日期、本人邮箱地址及已有同账户事项、历史记录和人工审查备注送宿主配置的模型，模型可能是云服务，结果有误判，应用打开期间每30秒检查，停用/重启需重新同意")
     })
 }
 fn confirm_consent(){
@@ -172,6 +405,10 @@ fn render_history(r){
     let text = ""
     for snapshot in hist {
         text += "历史快照：" + snapshot.title + "\n截止原文：" + snapshot.deadline_text + "\n证据：" + snapshot.evidence + "\n出处：" + snapshot.source_sender + " / " + snapshot.source_subject + " / " + snapshot.source_date + "\n待核实：" + snapshot.uncertainty + "\n\n"
+        let info = review_note_for(snapshot)
+        if info.kind != "" {
+            text += "历史审查：" + info.kind + " | " + info.reviewed_at.to_string() + " | " + info.note + "\n\n"
+        }
     }
     return text
 }
@@ -181,7 +418,11 @@ fn render_records(){
         let st = "待处理"
         let raw = status_of(r)
         if raw == "cancelled" { st = "已取消（不代表完成）" }
-        text += "状态：" + st + "\n" + r.title + "\n截止原文：" + r.deadline_text + "\n证据：" + r.evidence + "\n出处：" + r.source_sender + " / " + r.source_subject + " / " + r.source_date + "\n待核实：" + r.uncertainty + "\n\n"
+        let badge = "—"
+        let info = review_note_for(r)
+        if info.kind == "confirmed" { badge = "✅" }
+        if info.kind == "corrected" { badge = "📝" }
+        text += badge + " " + st + "\n" + r.title + "\n截止原文：" + r.deadline_text + "\n证据：" + r.evidence + "\n出处：" + r.source_sender + " / " + r.source_subject + " / " + r.source_date + "\n待核实：" + r.uncertainty + "\n\n"
         text += render_history(r)
     }
     if text.len() == 0 { ui.records_label.set_text("暂无事项；启用后由 AI 判断，不靠固定关键词") }
@@ -231,6 +472,12 @@ fn restore(){
         render_source_label()
         awaiting_source = nil
         ui.status_label.set_text("观察未启用；重启后需要重新授权启用")
+        // Initialize review panel visibility
+        if state.records.len() > 0 && !observing && !pending {
+            if ui.review_panel != nil { ui.review_panel.set_visible(true) }
+            select_review_record(0)
+            render_review_detail()
+        }
     } catch { stop_with("读取记录失败；未覆盖已有文件") }
 }
 fn next_poll(){
@@ -403,6 +650,26 @@ SolidView{width: Fill height: Fill draw_bg.color: #xffffff
         source_label := Label{text: "来源：暂无 / INBOX" width: Fill height: Fit draw_text.text_style.font_size: 13 draw_text.color: #x1c1c1e}
         status_label := Label{text: "正在读取本地记录" width: Fill height: Fit draw_text.text_style.font_size: 13 draw_text.color: #x1c1c1e}
         records_label := Label{text: "暂无事项" width: Fill height: Fit draw_text.text_style.font_size: 14 draw_text.color: #x1c1c1e}
-        Label{text: "AI 可能误判，请核对原文。仅应用打开时观察，重启默认停用；不提醒、不发送邮件。" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x666666}
+        ButtonFlat{text: "查阅上一条" width: Fill height: 32 on_click: || review_prev() draw_text +: {color: #x1c1c1e}}
+        ButtonFlat{text: "查阅下一条" width: Fill height: 32 on_click: || review_next() draw_text +: {color: #x1c1c1e}}
+        review_panel := ScrollYView{width: Fill height: Fit flow: Down spacing: 6 visible: false
+            Label{text: "事项详情" width: Fill height: Fit draw_text.text_style.font_size: 15 draw_text.color: #x1c1c1e}
+            review_title := Label{text: "" width: Fill height: Fit draw_text.text_style.font_size: 14 draw_text.color: #x1c1c1e}
+            review_deadline := Label{text: "" width: Fill height: Fit draw_text.text_style.font_size: 13 draw_text.color: #x888888}
+            Label{text: "原文证据：" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x666666}
+            review_evidence := Label{text: "" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x1c1c1e}
+            Label{text: "来源邮件：" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x666666}
+            review_sender := Label{text: "" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x1c1c1e}
+            review_subject := Label{text: "" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x1c1c1e}
+            review_date := Label{text: "" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x888888}
+            review_status := Label{text: "" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x1c1c1e}
+            review_history_label := Label{text: "" width: Fill height: Fit draw_text.text_style.font_size: 11 draw_text.color: #x888888 visible: false}
+            review_past_label := Label{text: "" width: Fill height: Fit draw_text.text_style.font_size: 11 draw_text.color: #x666666 visible: false}
+            Label{text: "修正备注（补充 AI 结果，限300字）：" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x1c1c1e}
+            review_note_input := TextInput{width: Fill height: Fit empty_text: "备注内容（选填）"}
+            ButtonFlat{text: "确认事项（确认不代表完成）" width: Fill height: 36 on_click: || confirm_record() draw_text +: {color: #x1c1c1e}}
+            ButtonFlat{text: "保存修正备注" width: Fill height: 36 on_click: || correct_record() draw_text +: {color: #x1c1c1e}}
+        }
+        Label{text: "云分析将邮件正文、发件人、主题、日期、本人邮箱地址及已有同账户事项、历史记录和人工审查备注送宿主配置的模型。确认不代表完成；修正备注仅补充审查元数据，不修改原邮件证据。AI 可能误判，请核对原文。仅应用打开时观察，重启默认停用；不提醒、不发送邮件。" width: Fill height: Fit draw_text.text_style.font_size: 12 draw_text.color: #x666666}
     }
 }

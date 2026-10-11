@@ -1,0 +1,244 @@
+{
+  "passed": true,
+  "scope": "unmodified copied bundle, local review UI and persistence only",
+  "source_instrumented": false,
+  "mail_or_model_buttons_clicked": false,
+  "real_mail_or_ai_verified": false,
+  "not_covered": [
+    "observing/pending races",
+    "new AI update/cancel producing history",
+    "real mailbox/model",
+    "full OctoSense desktop",
+    "competition media"
+  ],
+  "harness_sha256": "760792e66069e549da28e6865873684d0a86e13e0c95a1802563965e3b14a82f",
+  "cases": [
+    {
+      "case": "empty_navigation_does_not_write",
+      "passed": true
+    },
+    {
+      "case": "empty_selection_has_no_fictional_detail",
+      "passed": true
+    },
+    {
+      "case": "legacy_schema_restores_default_off",
+      "passed": true
+    },
+    {
+      "case": "detail_selected_LOCAL-LEGACY-ALPHA",
+      "passed": true
+    },
+    {
+      "case": "detail_selected_LOCAL-ACTIVE-BETA",
+      "passed": true
+    },
+    {
+      "case": "detail_selected_LOCAL-CANCELLED-GAMMA",
+      "passed": true
+    },
+    {
+      "case": "previous_returns_previous_record",
+      "passed": true
+    },
+    {
+      "case": "previous_returns_legacy_record",
+      "passed": true
+    },
+    {
+      "case": "navigation_is_read_only",
+      "passed": true
+    },
+    {
+      "case": "selected_detail_displays_source",
+      "passed": true
+    },
+    {
+      "case": "detail_displays_history_evidence_and_prior_review",
+      "passed": true
+    },
+    {
+      "case": "current_record_does_not_inherit_historical_confirmation",
+      "passed": true
+    },
+    {
+      "case": "confirmation_disclaimer_and_supplement_explained",
+      "passed": true
+    },
+    {
+      "case": "confirmation_saved_and_readback",
+      "passed": true
+    },
+    {
+      "case": "current_provenance_status_and_processed_unchanged",
+      "passed": true
+    },
+    {
+      "case": "existing_history_preserved_0",
+      "passed": true
+    },
+    {
+      "case": "existing_history_preserved_1",
+      "passed": true
+    },
+    {
+      "case": "complete_history_snapshot_1",
+      "passed": true
+    },
+    {
+      "case": "existing_history_preserved_2",
+      "passed": true
+    },
+    {
+      "case": "confirmed_review_survives_restart_default_off",
+      "passed": true
+    },
+    {
+      "case": "blank_correction_rejected_without_write",
+      "passed": true
+    },
+    {
+      "case": "oversized_correction_rejected_without_write",
+      "passed": true
+    },
+    {
+      "case": "300_character_correction_saved_readback",
+      "passed": true
+    },
+    {
+      "case": "current_provenance_status_and_processed_unchanged",
+      "passed": true
+    },
+    {
+      "case": "existing_history_preserved_0",
+      "passed": true
+    },
+    {
+      "case": "existing_history_preserved_1",
+      "passed": true
+    },
+    {
+      "case": "complete_history_snapshot_1",
+      "passed": true
+    },
+    {
+      "case": "existing_history_preserved_2",
+      "passed": true
+    },
+    {
+      "case": "correction_survives_restart_default_off",
+      "passed": true
+    },
+    {
+      "case": "confirmation_never_marks_cancelled_record_complete",
+      "passed": true
+    },
+    {
+      "case": "current_provenance_status_and_processed_unchanged",
+      "passed": true
+    },
+    {
+      "case": "existing_history_preserved_0",
+      "passed": true
+    },
+    {
+      "case": "existing_history_preserved_1",
+      "passed": true
+    },
+    {
+      "case": "complete_history_snapshot_1",
+      "passed": true
+    },
+    {
+      "case": "existing_history_preserved_2",
+      "passed": true
+    },
+    {
+      "case": "write_failure_never_claims_confirmation",
+      "passed": true,
+      "status": "保存失败；观察已停用，未报告核对成功"
+    },
+    {
+      "case": "bad-kind_restore_refused",
+      "passed": true,
+      "status": "记录状态或历史异常；已保留原文件，未启用观察"
+    },
+    {
+      "case": "bad-kind_original_bytes_preserved",
+      "passed": true
+    },
+    {
+      "case": "bad-note-type_restore_refused",
+      "passed": true,
+      "status": "记录状态或历史异常；已保留原文件，未启用观察"
+    },
+    {
+      "case": "bad-note-type_original_bytes_preserved",
+      "passed": true
+    },
+    {
+      "case": "bad-time-type_restore_refused",
+      "passed": true,
+      "status": "记录状态或历史异常；已保留原文件，未启用观察"
+    },
+    {
+      "case": "bad-time-type_original_bytes_preserved",
+      "passed": true
+    },
+    {
+      "case": "bad-time-negative_restore_refused",
+      "passed": true,
+      "status": "记录状态或历史异常；已保留原文件，未启用观察"
+    },
+    {
+      "case": "bad-time-negative_original_bytes_preserved",
+      "passed": true
+    },
+    {
+      "case": "bad-note-over-limit_restore_refused",
+      "passed": true,
+      "status": "记录状态或历史异常；已保留原文件，未启用观察"
+    },
+    {
+      "case": "bad-note-over-limit_original_bytes_preserved",
+      "passed": true
+    },
+    {
+      "case": "bad-corrected-blank_restore_refused",
+      "passed": true,
+      "status": "记录状态或历史异常；已保留原文件，未启用观察"
+    },
+    {
+      "case": "bad-corrected-blank_original_bytes_preserved",
+      "passed": true
+    },
+    {
+      "case": "bad-history-review_restore_refused",
+      "passed": true,
+      "status": "记录状态或历史异常；已保留原文件，未启用观察"
+    },
+    {
+      "case": "bad-history-review_original_bytes_preserved",
+      "passed": true
+    },
+    {
+      "case": "bad-partial-review_restore_refused",
+      "passed": true,
+      "status": "记录状态或历史异常；已保留原文件，未启用观察"
+    },
+    {
+      "case": "bad-partial-review_original_bytes_preserved",
+      "passed": true
+    },
+    {
+      "case": "original_bundle_unchanged",
+      "passed": true
+    }
+  ],
+  "app_id": "no-reminder-agent",
+  "version": "0.5.5-rc.1",
+  "main_splash_sha256": "39c4223c6da58829d1f4e644d03a434daf35e858b76f3b9fd61e0a949f921ae1",
+  "checks": 53,
+  "fixture": "fictional example.invalid records",
+  "verified_date": "2026-10-11"
+}
