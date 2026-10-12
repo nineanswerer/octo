@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "subtitle": "授权观察，AI识别，自动记录",
-  "description": "授权一个邮箱后，单独同意云分析，应用打开期间自动判断最近5封邮件的本人承诺，创建、改期或取消，保留证据和历史。可人工核对和纠错，确认不代表完成。0.5.5候选核心已通过五封真实POP3 TLS邮件与MiniMax-M3分析；不代表任意邮件准确率。只验证Windows；原RC2网易IMAP缺ID，本次使用POP3；完整等待竞态未覆盖。不发邮件、不提醒、不做系统后台观察。",
+  "description": "授权一个邮箱后，单独同意云分析，应用打开期间自动判断最近5封邮件的本人承诺，创建、改期或取消，保留证据和历史。可人工核对和纠错，确认不代表完成。本次相同核心已通过五封真实POP3 TLS邮件与MiniMax-M3分析；不代表任意邮件准确率。只验证Windows；原RC2网易IMAP缺ID，本次使用POP3；完整等待竞态未覆盖。不发邮件、不提醒、不做系统后台观察。",
   "category": "productivity",
   "keywords": [
     "授权观察",
@@ -19,12 +19,12 @@
   "platforms": [
     "windows"
   ],
-  "release_notes": "0.5.5：事项详情、确认和修正备注；五封真实POP3 TLS/MiniMax-M3回环、去重与重启恢复通过；公开脱敏结果回放及验证报告。完整等待竞态未覆盖，网易原版IMAP缺ID仍存在。核心逻辑与已验候选相同。",
+  "release_notes": "0.5.6：撤下错误旧媒体，提供原版RC2实际操作录屏与更新的复现资料。核心与五封真实POP3 TLS/MiniMax-M3验收版本一致；无新增权限或产品模型调用。",
   "age_rating": "all",
   "publisher": {
     "name": "Team 南下",
     "support": "https://github.com/nineanswerer/octo/issues",
-    "privacy_policy_url": "https://github.com/nineanswerer/octo/blob/v0.5.5/PRIVACY.md"
+    "privacy_policy_url": "https://github.com/nineanswerer/octo/blob/v0.5.6/PRIVACY.md"
   },
   "license": "Apache-2.0"
 }

@@ -3,7 +3,7 @@
 应用入口bundle/main.splash，不是独立exe。仅验证Windows。本次使用[官方OctoSense desktop-v0.1.0-rc.2](https://github.com/OctoSense-org/OctoSense/releases/tag/desktop-v0.1.0-rc.2)，宿主提交4ccf8e068399b1da139771a9ed94cef05fa6ae60；没有使用历史0.5.4自编译补丁。
 
 1. 从官方宿主Release安装对应Windows版本，核对官方资产摘要。
-2. 从[本应用Release](https://github.com/nineanswerer/octo/releases)取得固定版app.bundle.pack.json，经兼容GitHub证明的App Hub安装。正式Release生成前参阅提交状态，源码目录不等于封存包。
+2. 从[本应用Release](https://github.com/nineanswerer/octo/releases)取得固定版app.bundle.pack.json，经兼容GitHub证明的App Hub安装。当前应用尚待官方 Hub 准入，默认商店不保证能搜索到。已验安装使用本机开发签名目录，步骤见官方 [提交指南](https://github.com/OctoSense-org/OctoSense-App-Hub/blob/main/docs/SUBMITTING.zh-CN.md)。审核下载包应先 publisher-unpack 到新审查目录，再 publisher-verify --catalog 指向经过 catalog-verify 的官方 catalog-v2.json；源码目录不等于封存包。
 3. 在宿主AI Providers配置本人产品模型和额度，本次核实MiniMax中国区MiniMax-M3、无fallback。编程Plan不能代替产品API额度。
 4. 宿主邮箱页面连接一个本人测试邮箱，填写对应服务器/端口/TLS/授权码；默认服务器不会自动匹配地址。
 5. 应用核验来源后再单独同意云分析。[五封步骤](REAL_MAIL_ACCEPTANCE.md)。

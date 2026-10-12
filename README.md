@@ -2,7 +2,7 @@
 
 **持续维护邮箱中的本人承诺。** 自动创建、改期、取消，排除他人安排；保留原文与历史，允许人工核对和纠错。
 
-0.5.5 交付版本，纯OctoScript，官方mail/model/storage服务。单一授权邮箱、最近5封、应用打开期间每30秒检查、重启默认停用。不发送邮件、不提醒、不扫描其他应用。
+0.5.6 交付版本，纯OctoScript，官方mail/model/storage服务。单一授权邮箱、最近5封、应用打开期间每30秒检查、重启默认停用。不发送邮件、不提醒、不扫描其他应用。
 
 ## 已验证
 
@@ -21,8 +21,8 @@
 
 ## 交付与限制
 
-[正式版本与提交状态](SUBMISSION_NOTES.md) · [演示](demo/SEMIFINAL_0.5.5.md)。正式Release生成前，不把候选Actions产物当成正式提交。Hub准入和评分由维护者及评委决定。
+[正式版本与提交状态](SUBMISSION_NOTES.md) · [演示](demo/SEMIFINAL_0.5.6.md)。固定正式版本为 [v0.5.6](https://github.com/nineanswerer/octo/releases/tag/v0.5.6)，工作流封存包及桌面安装回执在 Release。Hub准入和评分由维护者及评委决定。
 
 仅验证Windows。网易126原版RC2的IMAP客户端缺ID，读箱被拒；本次用户开启POP3 TLS后验收，没有修复官方宿主。独立card-host没有mail/model服务。最近5封之外可能遗漏；事项/去重各100条、历史20条上限；相对期限保留原文，AI仍可能误判。
 
-历史0.5.4材料保留于[历史提交](submission/2026-10-06/README.md)，不能替代当前验收。Apache-2.0，作者nineanswerer，队伍南下。[反馈](https://github.com/nineanswerer/octo/issues) · [本队初赛82/100评语](https://github.com/OctoSense-org/OctoSense-App-Hub/issues/74)
+旧版本媒体已从当前交付树撤下；旧标签保留历史，不能替代当前验收。Apache-2.0，作者nineanswerer，队伍南下。[反馈](https://github.com/nineanswerer/octo/issues) · [本队初赛82/100评语](https://github.com/OctoSense-org/OctoSense-App-Hub/issues/74)
