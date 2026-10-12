@@ -1,0 +1,76 @@
+{
+  "schema": 2,
+  "source": {
+    "account": "test-account",
+    "address": "demo@example.invalid",
+    "folder": "INBOX"
+  },
+  "records": [
+    {
+      "id": "test-account/INBOX/minutes",
+      "account": "test-account",
+      "title": "OCTO-REAL-001 研讨课纪要",
+      "deadline_text": "后天18:00",
+      "evidence": "这是合成验收邮件。明确取消你本人负责的本次OCTO-REAL-001研讨课纪要，你不用再提交这份纪要。此事项是取消，不是已经完成。",
+      "source_key": "test-account/INBOX/case-4",
+      "source_sender": "tester@example.invalid",
+      "source_subject": "OCTO-REAL-001-04 取消本人纪要",
+      "source_date": "2026-10-12T11:45:05+00:00",
+      "uncertainty": "脱敏回放：真实分析结果；录制期间未调用模型。 ",
+      "recorded_at": 1791806512.53171,
+      "status": "cancelled",
+      "history": [
+        {
+          "id": "test-account/INBOX/minutes",
+          "account": "test-account",
+          "title": "OCTO-REAL-001 研讨课纪要",
+          "deadline_text": "明天18:00",
+          "evidence": "你本人负责本次OCTO-REAL-001研讨课纪要，请在明天18:00提交这份纪要。",
+          "source_sender": "tester@example.invalid",
+          "source_subject": "OCTO-REAL-001-01 创建研讨课纪要",
+          "source_date": "2026-10-12T11:44:58+00:00",
+          "source_key": "test-account/INBOX/case-1",
+          "uncertainty": "脱敏回放：真实分析结果；录制期间未调用模型。 截止时间为相对日期\"明天18:00\"，未指明绝对日期",
+          "recorded_at": 1791806399.2737663,
+          "status": "active"
+        },
+        {
+          "id": "test-account/INBOX/minutes",
+          "account": "test-account",
+          "title": "OCTO-REAL-001 研讨课纪要",
+          "deadline_text": "后天18:00",
+          "evidence": "你本人负责的同一份OCTO-REAL-001研讨课纪要，提交期限从明天18:00改到后天18:00。只改这一份纪要的期限，仍需提交。",
+          "source_sender": "tester@example.invalid",
+          "source_subject": "OCTO-REAL-001-02 同一纪要改期",
+          "source_date": "2026-10-12T11:45:00+00:00",
+          "source_key": "test-account/INBOX/case-2",
+          "uncertainty": "脱敏回放：真实分析结果；录制期间未调用模型。 截止时间为相对日期\"后天18:00\"，未指明绝对日期",
+          "recorded_at": 1791806439.3723254,
+          "status": "active"
+        }
+      ]
+    },
+    {
+      "id": "test-account/INBOX/registration",
+      "account": "test-account",
+      "title": "OCTO-REAL-001 报名名单",
+      "deadline_text": "下周一",
+      "evidence": "请你本人在下周一提供另一个独立项目OCTO-REAL-001报名名单。这是一个全新的事项，与已取消的研讨课纪要无关，也不恢复纪要。",
+      "uncertainty": "脱敏回放：真实分析结果；录制期间未调用模型。 截止时间为相对日期\"下周一\"，未指明绝对日期；邮件明确说明与已取消的研讨课纪要无关，是全新独立事项",
+      "source_key": "test-account/INBOX/case-5",
+      "source_sender": "tester@example.invalid",
+      "source_subject": "OCTO-REAL-001-05 独立报名名单",
+      "source_date": "2026-10-12T11:45:07+00:00",
+      "recorded_at": 1791806550.2733781,
+      "status": "active",
+      "history": []
+    }
+  ],
+  "processed": [
+    "test-account/INBOX/case-1",
+    "test-account/INBOX/case-2",
+    "test-account/INBOX/case-3",
+    "test-account/INBOX/case-4",
+    "test-account/INBOX/case-5"
+  ]
+}

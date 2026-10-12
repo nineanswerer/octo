@@ -1,37 +1,28 @@
-# 南下 · 无提醒 Agent
+# 无提醒 Agent · 南下
 
-**从授权邮件主动识别与你有关的事项、截止时间、改期和取消，保留证据，不催促你。**
+**持续维护邮箱中的本人承诺。** 自动创建、改期、取消，排除他人安排；保留原文与历史，允许人工核对和纠错。
 
-例如邮件说"今天晚上6点前交稿"，记录事项；后续"改成明天中午"，更新同一事项并保留旧期限；再说"取消"，标记取消并保留记录，不能当作完成。
+0.5.5 交付版本，纯OctoScript，官方mail/model/storage服务。单一授权邮箱、最近5封、应用打开期间每30秒检查、重启默认停用。不发送邮件、不提醒、不扫描其他应用。
 
-**[0.5.4 历史演示、截图和应用包下载](submission/2026-10-06/README.md)** · [中文使用说明](README.zh-CN.md) · [需求与范围](BRIEF.md)
+## 已验证
 
-当前候选 **0.5.5-rc.1，纯 OctoScript**，使用官方宿主mail/model/storage服务。只观察一个邮箱最近5封，应用打开时每30秒检查，重启默认停用。先核验来源，再单独同意云分析；不发送邮件、不弹提醒、不扫描其他应用。
+2026-10-12，固定0.5.5-rc.1核心在原版OctoSense RC2中，通过POP3 TLS及MiniMax-M3完成五封真实投递邮件的分析：创建纪要→同一事项改期→忽略他人取消→取消本人纪要→独立报名名单。两个事项、历史保留，重复扫描不重复调用，重启记录保持且默认停用。
 
-本候选增加事项详情，支持查阅来源证据和历史期限，并人工确认事项或保存修正备注。确认不代表完成，修正备注保留原邮件证据。
+邮件内容是合成测试，传输和模型分析是真实的；5例通过不代表任意邮件准确率。[本次真实验收](validation/REAL_MAIL_0.5.5.md)。另有53项本地UI/存储检查、9项完整RC2合成交互及7类新存储/来源场景；[异常覆盖边界](validation/LIFECYCLE_0.5.5.md)。
 
-## 当前验证
+## 使用
 
-**本候选的53项本地UI/持久化检查在当前源码上通过，详见 [本地验收记录](validation/local-review-0.5.5-rc.1.json)；完整RC2桌面、真实邮箱与模型回环、新版截图和录像仍待验收。** 候选截图为标注的原生合成示例，0.5.4历史材料不作为本候选新增功能的验收证据。
+1. 在完整宿主配置本人产品模型，宿主邮箱页面连接一个测试邮箱。
+2. “启用观察与 AI 分析”核验来源，再单独“同意本次云分析并开始”；模型可能是云服务，费用由本人承担。
+3. 查看原文、来源和历史。先停用观察，再确认或补充修正备注；确认不代表完成，备注不改原文。
+4. 退出结束观察，重开需重新同意。
 
-候选封存包将仅通过GitHub Actions artifact提供，生成与桌面验收尚待完成；本候选不创建GitHub Release、不作为最终提交，也未获得App Hub准入。
+[中文说明](README.zh-CN.md) · [安装与无模型查看](docs/RUNNING.md) · [隐私](PRIVACY.md) · [复现](docs/REAL_MAIL_ACCEPTANCE.md)
 
-以下为 **0.5.4 历史验证记录**：27项合成原生业务检查、5项生产界面检查及8项录像检查通过。正常业务演示使用合成邮件和预设模型响应，已明确标注；**0.5.4 已完成真实 QQ 测试邮箱与在线 MiniMax 模型的5封受控业务回环：创建、改期、忽略他人事项、取消、独立新事项；重启保留记录并默认停用。** [历史真实回环结果](validation/real-mail-0.5.4-results.json)。这些结果不保证本候选、任意邮件的识别质量或官方审核。 [历史验证与限制](validation/COMMITMENT_CHANGES.md) · [历史App Flow对照](validation/APP_FLOW_AUDIT.md)。
+## 交付与限制
 
-## 运行
+[正式版本与提交状态](SUBMISSION_NOTES.md) · [演示](demo/SEMIFINAL_0.5.5.md)。正式Release生成前，不把候选Actions产物当成正式提交。Hub准入和评分由维护者及评委决定。
 
-正式业务需要带官方mail/model服务的完整OctoSense宿主，配置本人可用模型并授权邮箱。应用不收集密码或模型密钥。[宿主版本与启动](docs/RUNNING.md) · [模型配置](docs/OFFICIAL_RUNTIME_AI.md)。
+仅验证Windows。网易126原版RC2的IMAP客户端缺ID，读箱被拒；本次用户开启POP3 TLS后验收，没有修复官方宿主。独立card-host没有mail/model服务。最近5封之外可能遗漏；事项/去重各100条、历史20条上限；相对期限保留原文，AI仍可能误判。
 
-独立card-host只能查看界面与缺服务状态。在Windows设置OCTO_CARD_HOST为对应card-host.exe的完整路径后运行octocard.bat。0.5.4历史验证仅覆盖Windows，本候选的完整宿主验收尚待完成。
-
-## 交付文档
-
-| 内容 | 入口 |
-| --- | --- |
-| 使用与隐私 | [中文说明](README.zh-CN.md)、[权限和数据](PRIVACY.md) |
-| 可复现验收 | [测试邮件与验收步骤](docs/REAL_MAIL_ACCEPTANCE.md)、[历史合成录像复现](demo/INITIAL_0.5.3.md) |
-| 历史审核材料（0.5.4） | [七项回答](build/REVIEW-ANSWERS.md)、[审核包](build/review.json) |
-| 提交版本及状态 | [赛事与App Hub记录](SUBMISSION_NOTES.md) |
-| 许可与反馈 | [Apache-2.0](LICENSE)、[项目Issues](https://github.com/nineanswerer/octo/issues) |
-
-作者nineanswerer，队伍南下。[官方赛事报送](https://github.com/gosimfoundation/hackathon-agenticapp26/issues/13#issuecomment-5992477923)。App Hub [#74](https://github.com/OctoSense-org/OctoSense-App-Hub/issues/74)仍固定v0.5.1、待审核；不代表赛事晋级或已上架。
+历史0.5.4材料保留于[历史提交](submission/2026-10-06/README.md)，不能替代当前验收。Apache-2.0，作者nineanswerer，队伍南下。[反馈](https://github.com/nineanswerer/octo/issues) · [本队初赛82/100评语](https://github.com/OctoSense-org/OctoSense-App-Hub/issues/74)

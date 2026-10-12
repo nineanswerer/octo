@@ -1,0 +1,50 @@
+{
+  "schema": 2,
+  "source": {
+    "account": "synthetic-account",
+    "address": "demo@example.invalid",
+    "folder": "INBOX"
+  },
+  "records": [
+    {
+      "id": "synthetic-account/INBOX/minutes",
+      "account": "synthetic-account",
+      "title": "合成示例：提交研讨课纪要",
+      "deadline_text": "明晚18:00",
+      "evidence": "纪要改到明晚18:00交。",
+      "uncertainty": "合成示例，未调用邮箱或模型",
+      "source_sender": "editor@example.invalid",
+      "source_subject": "期限更新（合成）",
+      "source_date": "2026-10-10 10:00",
+      "source_key": "synthetic-account/INBOX/new",
+      "recorded_at": 1791597600,
+      "status": "active",
+      "review_kind": "corrected",
+      "review_note": "相对时间须核对邮件日期。",
+      "reviewed_at": 1791597900,
+      "history": [
+        {
+          "id": "synthetic-account/INBOX/minutes",
+          "account": "synthetic-account",
+          "title": "提交研讨课纪要",
+          "deadline_text": "今晚18:00",
+          "evidence": "请在今晚18:00交纪要。",
+          "uncertainty": "合成示例，未调用邮箱或模型",
+          "source_sender": "editor@example.invalid",
+          "source_subject": "纪要初稿（合成）",
+          "source_date": "2026-10-10 09:00",
+          "source_key": "synthetic-account/INBOX/old",
+          "recorded_at": 1791594000,
+          "status": "active",
+          "review_kind": "confirmed",
+          "review_note": "已核对原文；确认不代表完成。",
+          "reviewed_at": 1791594300
+        }
+      ]
+    }
+  ],
+  "processed": [
+    "synthetic-account/INBOX/old",
+    "synthetic-account/INBOX/new"
+  ]
+}

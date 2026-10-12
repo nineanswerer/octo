@@ -1,11 +1,9 @@
-# 提交版本与状态
+# 复赛交付状态 · 南下
 
-- 队伍南下；成员nineanswerer，单人队，个人报名由本人确认完成。
-- 赛事报送：[官方#13](https://github.com/gosimfoundation/hackathon-agenticapp26/issues/13#issuecomment-5992477923)，仅队伍名与仓库地址。
-- 队伍信息：[官方#5](https://github.com/gosimfoundation/hackathon-agenticapp26/issues/5#issuecomment-5992326966)。
-- 固定标签：[v0.5.3-initial](https://github.com/nineanswerer/octo/tree/v0.5.3-initial)，提交8c976c3ac23f40b7c5c17aa70f52e0dddcd5083e，不覆盖。
-- 当前master为后续改进。[10月6日补充材料](submission/2026-10-06/README.md)是否纳入初赛评审尚无确认，不冒充冻结版本。
-- App Hub [#74](https://github.com/OctoSense-org/OctoSense-App-Hub/issues/74)仍v0.5.1，未擅自更新；本地预检不代表批准。
-- 0.5.4已通过真实QQ测试邮箱与在线模型的5封受控业务回环，见 validation/REAL_MAIL_0.5.4.md；原0.5.3录像后六段仍为合成邮件与预设模型响应，不改标注。
+本队[App Hub #74](https://github.com/OctoSense-org/OctoSense-App-Hub/issues/74)初赛82/100入围，评审固定v0.5.1。旧Windows摘要问题被评委明确为工具问题；当前使用GitHub发布证明流程。
 
-公开赛程仍记载10月4日截止；本人告知群内延长至10月5日23:59。补充材料采纳以赛事方为准。
+本次交付版本v0.5.5，沿用已验0.5.5-rc.1核心。五封真实POP3 TLS+MiniMax-M3、完整RC2及本地检查见validation；官方IMAP限制和未覆盖竞态已披露。
+
+[v0.5.5 Release](https://github.com/nineanswerer/octo/releases/tag/v0.5.5)由标签工作流生成封存证明包；实际发布状态以该页和附带release-receipt.json为准。[三分钟视频与两分钟讲述稿](demo/SEMIFINAL_0.5.5.md)已准备。正式封存包安装与复赛提交回执需独立核对；提交后的最终链接记录于本队issue。候选tag与Actions证明不是正式Release或Hub准入；不声明复赛获奖。
+
+历史0.5.4交付在submission/2026-10-06，旧材料保留但不替代本次新增功能证据。截止按队伍收到通知为2026-10-13 21:00北京时间。
