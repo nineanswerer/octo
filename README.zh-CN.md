@@ -12,6 +12,8 @@
 
 当前核心的五封真实POP3 TLS+MiniMax-M3回环、重复扫描和重启通过；[结果](validation/REAL_MAIL_0.5.5.md)。[异常矩阵](validation/LIFECYCLE_0.5.5.md)列明未覆盖项，不能把合成或静态检查冒充真实业务。
 
-仅验证Windows、单一邮箱。网易126原RC2 IMAP缺客户端ID，本次使用POP3，未修复宿主。先让最新5封全部为本人测试内容再同意云分析；不要将私人邮件交给未接受的数据服务。产品API费用与Kimi/MiniMax开发套餐分离，没有免费默认模型。
+仅验证Windows、单一邮箱。网易126原RC2 IMAP缺客户端ID，本次使用官方原生POP3，未修复IMAP。配置时须在宿主选择“POP3: inbox only”，仅修改服务器和端口不够。先让最新5封全部为本人测试内容再同意云分析；不要将私人邮件交给未接受的数据服务。产品API费用与Kimi/MiniMax开发套餐分离，没有免费默认模型。
+
+本轮实际RC2录屏使用脱敏保存结果，零新增邮箱读取与云调用；采集232.518秒，编码后播放180秒。RC2真实回环不能当作RC6通过证据，RC6兼容另有报告。[Release复现补充](https://github.com/nineanswerer/octo/releases/download/v0.5.6/REPRODUCING_0.5.6.md)说明协议配置、媒体和历史范围。默认分支已移出内含旧截图的历史ZIP；旧报告只表示当时结果。本次资料补充不改固定标签及封存包。
 
 [首页](README.md) · [安装](docs/RUNNING.md) · [隐私](PRIVACY.md) · [交付状态](SUBMISSION_NOTES.md)

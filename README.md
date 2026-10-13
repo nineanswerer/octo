@@ -23,6 +23,8 @@
 
 [正式版本与提交状态](SUBMISSION_NOTES.md) · [演示](demo/SEMIFINAL_0.5.6.md)。固定正式版本为 [v0.5.6](https://github.com/nineanswerer/octo/releases/tag/v0.5.6)，工作流封存包及桌面安装回执在 Release。Hub准入和评分由维护者及评委决定。
 
+本轮主媒体为 Release 中的实际 RC2 操作录屏，使用真实验收结果的脱敏保存副本，零新增云调用；采集232.518秒，编码后播放180秒。[复现补充与证据范围](https://github.com/nineanswerer/octo/releases/download/v0.5.6/REPRODUCING_0.5.6.md)说明原生POP3协议选择、历史资料及RC2/RC6证据边界。默认分支追加资料清理，不改固定v0.5.6标签或封存包。
+
 仅验证Windows。网易126原版RC2的IMAP客户端缺ID，读箱被拒；本次用户开启POP3 TLS后验收，没有修复官方宿主。独立card-host没有mail/model服务。最近5封之外可能遗漏；事项/去重各100条、历史20条上限；相对期限保留原文，AI仍可能误判。
 
-旧版本媒体已从当前交付树撤下；旧标签保留历史，不能替代当前验收。Apache-2.0，作者nineanswerer，队伍南下。[反馈](https://github.com/nineanswerer/octo/issues) · [本队初赛82/100评语](https://github.com/OctoSense-org/OctoSense-App-Hub/issues/74)
+旧版本媒体及两个内含早期截图的0.5.3/0.5.4 ZIP已从当前默认分支移出；固定标签和早期验证报告保留历史，不能替代本轮主媒体、安装包或验收。Apache-2.0，作者nineanswerer，队伍南下。[反馈](https://github.com/nineanswerer/octo/issues) · [本队初赛82/100评语](https://github.com/OctoSense-org/OctoSense-App-Hub/issues/74)

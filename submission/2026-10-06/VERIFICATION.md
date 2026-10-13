@@ -1,4 +1,8 @@
-# 本轮检查与证据边界
+# 历史检查与证据边界（2026-10-06）
+
+以下保留早期检查记录。“本轮”“当前”等表述指该记录日期，不代表0.5.6的新验收；旧媒体及两个内含旧截图的ZIP已从当前默认分支移出，固定标签保留历史。
+
+本轮主材料请查看 [0.5.6 Release](https://github.com/nineanswerer/octo/releases/tag/v0.5.6)、[真实五封报告](../../validation/REAL_MAIL_0.5.5.md)、[异常覆盖](../../validation/LIFECYCLE_0.5.5.md)和 [复现补充](https://github.com/nineanswerer/octo/releases/download/v0.5.6/REPRODUCING_0.5.6.md)。本页历史材料不作本轮安装包或主媒体，本次资料清理不改标签及封存包。
 
 - 应用脚本来源：master `5960702f933c63d5e53f24c80ddf7e78e16a34cc`，main.splash未改。本轮删除未列入listing的旧版截图，重新stamp和生成审核包；ZIP逐文件与整理后的bundle比较，字节完全一致。未改变冻结标签。
 - 原生录像：10月5日采集的0.5.3录像；原有8项录像检查、27项合成回归和5项生产UI检查见[原验证](../../validation/COMMITMENT_CHANGES.md)与[采集回执](verification/recording.json)。本轮没有声称重新执行这些业务测试。
@@ -11,4 +15,4 @@
 
 ### 0.5.4 后续修复与真实验收
 
-[当前0.5.4应用包](bundle/no-reminder-agent-0.5.4.zip) · [真实邮件验收](../../validation/REAL_MAIL_0.5.4.md)。0.5.4完成受控真实QQ邮件与在线模型回环；上述0.5.3视频与包保留原始版本及合成说明，不更改初赛冻结标签。
+[历史0.5.4应用包（固定标签内归档）](https://github.com/nineanswerer/octo/blob/v0.5.6/submission/2026-10-06/bundle/no-reminder-agent-0.5.4.zip) · [当时的真实邮件验收](../../validation/REAL_MAIL_0.5.4.md)。0.5.4完成受控真实QQ邮件与在线模型回环；这些证据保持原始版本和当时范围，不能替代0.5.6的本轮材料。

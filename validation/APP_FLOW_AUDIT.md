@@ -1,5 +1,9 @@
 # 官方 App Design Flow 对照核查（2026-10-05）
 
+本页为2026-10-05/06历史记录。下文“当前”“本次”、版本和App Hub状态均指当时，不代表0.5.6交付状态；旧媒体及内含旧截图的历史ZIP已从当前默认分支移出，固定标签仍保留历史。本文不作本轮主媒体、安装包或新验收结论。
+
+本轮应查阅 [0.5.6 Release](https://github.com/nineanswerer/octo/releases/tag/v0.5.6)、[真实五封报告](REAL_MAIL_0.5.5.md)、[异常覆盖](LIFECYCLE_0.5.5.md)和 [复现补充](https://github.com/nineanswerer/octo/releases/download/v0.5.6/REPRODUCING_0.5.6.md)。此次默认分支资料清理不修改固定标签、bundle或证明包。
+
 依据：[script-app/FLOW.md](https://github.com/OctoSense-org/OctoScript-App-Design-Flow/blob/main/flows/script-app/FLOW.md)。源码权威为本仓库 master；初赛冻结 `v0.5.3-initial` 保留不变，App Hub #74 仍是 v0.5.1，二者不是本次 master 材料补正。
 
 | 流程 | 当前证据与边界 |
@@ -25,4 +29,4 @@ runtime/host-repro/OctoSense-App-Hub/target/release/hub.exe scan git-repo/bundle
 
 ## 2026-10-06 真实回环补充
 
-以上表格保留10月5日核查历史。当前0.5.4已通过5封真实QQ测试邮件与在线模型的创建、改期、忽略、取消、独立事项回环，以及停用和重启保存核验。修复经27项合成原生回归；重新stamp/check通过（仅未签名警告），scan生成当前源码审核包。[真实验收](REAL_MAIL_0.5.4.md)。真实业务截图、全新环境复现和官方审批仍不能据此宣称完成。
+以上表格保留10月5日核查历史。当时0.5.4已通过5封真实QQ测试邮件与在线模型的创建、改期、忽略、取消、独立事项回环，以及停用和重启保存核验。修复经27项合成原生回归；重新stamp/check通过（仅未签名警告），scan生成当时源码审核包。[历史真实验收](REAL_MAIL_0.5.4.md)。真实业务截图、全新环境复现和官方审批仍不能据此宣称完成。
