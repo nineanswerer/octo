@@ -1,0 +1,12 @@
+{
+  "capabilities": [
+    "storage"
+  ],
+  "id": "no-reminder-lifecycle-savefailure-test",
+  "integrity": {
+    "bundle_blake3": "21d7ead1f07ff29ed0ab901d4d102084d3db71b832f462376a53ec7407f9c7df"
+  },
+  "name": "Controlled fixed0.5.6 save failure",
+  "schema": 1,
+  "version": "0.0.1"
+}

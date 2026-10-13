@@ -1,0 +1,46 @@
+{
+  "scope": "actual fixed0.5.6 save_review/persist/stop_with; synthetic memory seed + directory collision causes real fs.write error; native controlled evidence, no official host modifications",
+  "started": "2026-10-13T13:09:50.585846+00:00",
+  "ended": "2026-10-13T13:09:52.031647+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "name": "confirm_save_failure_false",
+      "passed": true
+    },
+    {
+      "name": "confirm_save_failure_memory_unchanged",
+      "passed": true
+    },
+    {
+      "name": "confirm_save_failure_stays_disabled",
+      "passed": true
+    },
+    {
+      "name": "correction_save_failure_false",
+      "passed": true
+    },
+    {
+      "name": "correction_save_failure_memory_unchanged",
+      "passed": true
+    },
+    {
+      "name": "correction_save_failure_stays_disabled",
+      "passed": true
+    }
+  ],
+  "failed": [],
+  "runtime_errors": [],
+  "product_mail_model_calls": 0,
+  "runner_sha256": "970e17a27a80de4e65e98315edf9e52caa79785020f8ae0809dd21a68ca82679",
+  "tested_source": {
+    "fixed_tag": "v0.5.6",
+    "core_byte_equal_after_crlf_normalization": true,
+    "core_sha256": "1a281ca1188530288fba41e208495bf5b721d171189e542daadbfab9af4a1aa7",
+    "scope": "actual fixed0.5.6 save_review/persist/stop_with; synthetic memory seed + directory collision causes real fs.write error; native controlled evidence, no official host modifications"
+  },
+  "fixed_source_sha256": "39c4223c6da58829d1f4e644d03a434daf35e858b76f3b9fd61e0a949f921ae1",
+  "ui_messages": [
+    "status_label: 保存失败；观察已停用，未报告核对成功"
+  ]
+}

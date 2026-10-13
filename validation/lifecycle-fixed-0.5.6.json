@@ -1,0 +1,545 @@
+{
+  "scope": "actual product functions; synthetic host request queue + real native timers/files + diagnostic UI; no official host modifications or real services",
+  "started": "2026-10-13T13:06:15.738112+00:00",
+  "ended": "2026-10-13T13:07:03.625419+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "name": "baseline_restored",
+      "passed": true
+    },
+    {
+      "name": "actual_accounts_request_held",
+      "passed": true
+    },
+    {
+      "name": "stop_late_memory_unchanged",
+      "passed": true
+    },
+    {
+      "name": "stop_late_disk_unchanged",
+      "passed": true
+    },
+    {
+      "name": "stop_late_no_followup",
+      "passed": true
+    },
+    {
+      "name": "stop_late_stays_disabled",
+      "passed": true
+    },
+    {
+      "name": "actual_confirmation_request_held",
+      "passed": true
+    },
+    {
+      "name": "decline_late_stays_disabled",
+      "passed": true
+    },
+    {
+      "name": "decline_late_no_read_followup",
+      "passed": true
+    },
+    {
+      "name": "sync_late_held",
+      "passed": true
+    },
+    {
+      "name": "sync_late_memory_unchanged",
+      "passed": true
+    },
+    {
+      "name": "sync_late_disk_unchanged",
+      "passed": true
+    },
+    {
+      "name": "sync_late_no_followup",
+      "passed": true
+    },
+    {
+      "name": "sync_late_stays_disabled",
+      "passed": true
+    },
+    {
+      "name": "list_late_held",
+      "passed": true
+    },
+    {
+      "name": "list_late_memory_unchanged",
+      "passed": true
+    },
+    {
+      "name": "list_late_disk_unchanged",
+      "passed": true
+    },
+    {
+      "name": "list_late_no_followup",
+      "passed": true
+    },
+    {
+      "name": "list_late_stays_disabled",
+      "passed": true
+    },
+    {
+      "name": "message_late_held",
+      "passed": true
+    },
+    {
+      "name": "message_late_memory_unchanged",
+      "passed": true
+    },
+    {
+      "name": "message_late_disk_unchanged",
+      "passed": true
+    },
+    {
+      "name": "message_late_no_followup",
+      "passed": true
+    },
+    {
+      "name": "message_late_stays_disabled",
+      "passed": true
+    },
+    {
+      "name": "model_late_held",
+      "passed": true
+    },
+    {
+      "name": "model_late_memory_unchanged",
+      "passed": true
+    },
+    {
+      "name": "model_late_disk_unchanged",
+      "passed": true
+    },
+    {
+      "name": "model_late_no_followup",
+      "passed": true
+    },
+    {
+      "name": "model_late_stays_disabled",
+      "passed": true
+    },
+    {
+      "name": "model_error_stops",
+      "passed": true
+    },
+    {
+      "name": "model_error_preserves_records",
+      "passed": true
+    },
+    {
+      "name": "model_error_no_followup",
+      "passed": true
+    },
+    {
+      "name": "zero_accounts_stops_before_body",
+      "passed": true
+    },
+    {
+      "name": "multiple_accounts_stops_before_body",
+      "passed": true
+    },
+    {
+      "name": "mismatched_account_stops_before_body",
+      "passed": true
+    },
+    {
+      "name": "non_inbox_consent_stops_before_request",
+      "passed": true
+    },
+    {
+      "name": "stopped_30s_timer_no_request_restart",
+      "passed": true
+    },
+    {
+      "name": "actual_45s_timeout_disables",
+      "passed": true
+    },
+    {
+      "name": "actual_45s_timeout_memory_unchanged",
+      "passed": true
+    },
+    {
+      "name": "actual_45s_timeout_disk_unchanged",
+      "passed": true
+    },
+    {
+      "name": "timeout_late_stays_disabled",
+      "passed": true
+    },
+    {
+      "name": "timeout_late_no_followup",
+      "passed": true
+    }
+  ],
+  "failed": [],
+  "runtime_errors": [],
+  "product_mail_model_calls": 0,
+  "runner_sha256": "970e17a27a80de4e65e98315edf9e52caa79785020f8ae0809dd21a68ca82679",
+  "tested_source": {
+    "fixed_tag": "v0.5.6",
+    "core_byte_equal_after_crlf_normalization": true,
+    "core_sha256": "1a281ca1188530288fba41e208495bf5b721d171189e542daadbfab9af4a1aa7",
+    "scope": "actual product functions; synthetic host request queue + real native timers/files + diagnostic UI; no official host modifications or real services"
+  },
+  "fixed_source_sha256": "39c4223c6da58829d1f4e644d03a434daf35e858b76f3b9fd61e0a949f921ae1",
+  "timeline": [
+    {
+      "event": "baseline_restored",
+      "passed": true,
+      "at": 1791896776.371322
+    },
+    {
+      "event": "request",
+      "name": "mail.accounts",
+      "at": 1791896776.3713822
+    },
+    {
+      "event": "actual_accounts_request_held",
+      "passed": true,
+      "at": 1791896776.371386
+    },
+    {
+      "event": "stop_late_memory_unchanged",
+      "passed": true,
+      "at": 1791896776.371672
+    },
+    {
+      "event": "stop_late_disk_unchanged",
+      "passed": true,
+      "at": 1791896776.3718536
+    },
+    {
+      "event": "stop_late_no_followup",
+      "passed": true,
+      "at": 1791896776.3718915
+    },
+    {
+      "event": "stop_late_stays_disabled",
+      "passed": true,
+      "at": 1791896776.3719144
+    },
+    {
+      "event": "request",
+      "name": "mail.accounts",
+      "at": 1791896776.371948
+    },
+    {
+      "event": "actual_confirmation_request_held",
+      "passed": true,
+      "at": 1791896776.37195
+    },
+    {
+      "event": "decline_late_stays_disabled",
+      "passed": true,
+      "at": 1791896776.3719914
+    },
+    {
+      "event": "decline_late_no_read_followup",
+      "passed": true,
+      "at": 1791896776.3720238
+    },
+    {
+      "event": "request",
+      "name": "mail.accounts",
+      "at": 1791896776.3720548
+    },
+    {
+      "event": "request",
+      "name": "mail.sync",
+      "at": 1791896776.3720706
+    },
+    {
+      "event": "sync_late_held",
+      "passed": true,
+      "at": 1791896776.3720746
+    },
+    {
+      "event": "sync_late_memory_unchanged",
+      "passed": true,
+      "at": 1791896776.3722546
+    },
+    {
+      "event": "sync_late_disk_unchanged",
+      "passed": true,
+      "at": 1791896776.372409
+    },
+    {
+      "event": "sync_late_no_followup",
+      "passed": true,
+      "at": 1791896776.3724473
+    },
+    {
+      "event": "sync_late_stays_disabled",
+      "passed": true,
+      "at": 1791896776.3724775
+    },
+    {
+      "event": "request",
+      "name": "mail.accounts",
+      "at": 1791896776.3725173
+    },
+    {
+      "event": "request",
+      "name": "mail.sync",
+      "at": 1791896776.3725314
+    },
+    {
+      "event": "request",
+      "name": "mail.list",
+      "at": 1791896776.3725379
+    },
+    {
+      "event": "list_late_held",
+      "passed": true,
+      "at": 1791896776.3725402
+    },
+    {
+      "event": "list_late_memory_unchanged",
+      "passed": true,
+      "at": 1791896776.372731
+    },
+    {
+      "event": "list_late_disk_unchanged",
+      "passed": true,
+      "at": 1791896776.37297
+    },
+    {
+      "event": "list_late_no_followup",
+      "passed": true,
+      "at": 1791896776.3730526
+    },
+    {
+      "event": "list_late_stays_disabled",
+      "passed": true,
+      "at": 1791896776.373121
+    },
+    {
+      "event": "request",
+      "name": "mail.accounts",
+      "at": 1791896776.3732016
+    },
+    {
+      "event": "request",
+      "name": "mail.sync",
+      "at": 1791896776.3732245
+    },
+    {
+      "event": "request",
+      "name": "mail.list",
+      "at": 1791896776.373234
+    },
+    {
+      "event": "request",
+      "name": "mail.message",
+      "at": 1791896776.3732612
+    },
+    {
+      "event": "message_late_held",
+      "passed": true,
+      "at": 1791896776.3732655
+    },
+    {
+      "event": "message_late_memory_unchanged",
+      "passed": true,
+      "at": 1791896776.3735278
+    },
+    {
+      "event": "message_late_disk_unchanged",
+      "passed": true,
+      "at": 1791896776.3737748
+    },
+    {
+      "event": "message_late_no_followup",
+      "passed": true,
+      "at": 1791896776.3738365
+    },
+    {
+      "event": "message_late_stays_disabled",
+      "passed": true,
+      "at": 1791896776.3738914
+    },
+    {
+      "event": "request",
+      "name": "mail.accounts",
+      "at": 1791896776.373957
+    },
+    {
+      "event": "request",
+      "name": "mail.sync",
+      "at": 1791896776.373971
+    },
+    {
+      "event": "request",
+      "name": "mail.list",
+      "at": 1791896776.3739796
+    },
+    {
+      "event": "request",
+      "name": "mail.message",
+      "at": 1791896776.3739934
+    },
+    {
+      "event": "request",
+      "name": "model.complete",
+      "at": 1791896776.3740215
+    },
+    {
+      "event": "model_late_held",
+      "passed": true,
+      "at": 1791896776.3740242
+    },
+    {
+      "event": "model_late_memory_unchanged",
+      "passed": true,
+      "at": 1791896776.3742125
+    },
+    {
+      "event": "model_late_disk_unchanged",
+      "passed": true,
+      "at": 1791896776.374374
+    },
+    {
+      "event": "model_late_no_followup",
+      "passed": true,
+      "at": 1791896776.374434
+    },
+    {
+      "event": "model_late_stays_disabled",
+      "passed": true,
+      "at": 1791896776.3744822
+    },
+    {
+      "event": "request",
+      "name": "mail.accounts",
+      "at": 1791896776.374536
+    },
+    {
+      "event": "request",
+      "name": "mail.sync",
+      "at": 1791896776.3745482
+    },
+    {
+      "event": "request",
+      "name": "mail.list",
+      "at": 1791896776.3745558
+    },
+    {
+      "event": "request",
+      "name": "mail.message",
+      "at": 1791896776.3745682
+    },
+    {
+      "event": "request",
+      "name": "model.complete",
+      "at": 1791896776.3745959
+    },
+    {
+      "event": "model_error_stops",
+      "passed": true,
+      "at": 1791896776.3746116
+    },
+    {
+      "event": "model_error_preserves_records",
+      "passed": true,
+      "at": 1791896776.374674
+    },
+    {
+      "event": "model_error_no_followup",
+      "passed": true,
+      "at": 1791896776.3747804
+    },
+    {
+      "event": "request",
+      "name": "mail.accounts",
+      "at": 1791896776.3748791
+    },
+    {
+      "event": "zero_accounts_stops_before_body",
+      "passed": true,
+      "at": 1791896776.3749006
+    },
+    {
+      "event": "request",
+      "name": "mail.accounts",
+      "at": 1791896776.374991
+    },
+    {
+      "event": "multiple_accounts_stops_before_body",
+      "passed": true,
+      "at": 1791896776.3750098
+    },
+    {
+      "event": "request",
+      "name": "mail.accounts",
+      "at": 1791896776.3751
+    },
+    {
+      "event": "mismatched_account_stops_before_body",
+      "passed": true,
+      "at": 1791896776.3751268
+    },
+    {
+      "event": "non_inbox_consent_stops_before_request",
+      "passed": true,
+      "at": 1791896776.3752315
+    },
+    {
+      "event": "request",
+      "name": "mail.accounts",
+      "at": 1791896776.375332
+    },
+    {
+      "event": "request",
+      "name": "mail.sync",
+      "at": 1791896776.3754792
+    },
+    {
+      "event": "request",
+      "name": "mail.list",
+      "at": 1791896776.3754916
+    },
+    {
+      "event": "request",
+      "name": "mail.message",
+      "at": 1791896776.375516
+    },
+    {
+      "event": "request",
+      "name": "model.complete",
+      "at": 1791896776.3755608
+    },
+    {
+      "event": "stopped_30s_timer_no_request_restart",
+      "passed": true,
+      "at": 1791896807.3797846
+    },
+    {
+      "event": "actual_45s_timeout_disables",
+      "passed": true,
+      "at": 1791896822.3719459
+    },
+    {
+      "event": "actual_45s_timeout_memory_unchanged",
+      "passed": true,
+      "at": 1791896822.3721752
+    },
+    {
+      "event": "actual_45s_timeout_disk_unchanged",
+      "passed": true,
+      "at": 1791896822.3724709
+    },
+    {
+      "event": "timeout_late_stays_disabled",
+      "passed": true,
+      "at": 1791896822.372568
+    },
+    {
+      "event": "timeout_late_no_followup",
+      "passed": true,
+      "at": 1791896822.372636
+    }
+  ],
+  "ui_messages": []
+}

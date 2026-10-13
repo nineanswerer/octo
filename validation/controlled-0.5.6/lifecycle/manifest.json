@@ -1,0 +1,12 @@
+{
+  "capabilities": [
+    "storage"
+  ],
+  "id": "no-reminder-lifecycle-controlled-test",
+  "integrity": {
+    "bundle_blake3": "423e36c7f21c628cb375566d8e1ccc9bee4d4fc41e4a60ecc8c678437abd27fb"
+  },
+  "name": "Controlled fixed0.5.6 lifecycle evidence",
+  "schema": 1,
+  "version": "0.0.1"
+}

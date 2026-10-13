@@ -17,3 +17,5 @@
 本轮实际RC2录屏使用脱敏保存结果，零新增邮箱读取与云调用；采集232.518秒，编码后播放180秒。RC2真实回环不能当作RC6通过证据，RC6兼容另有报告。[Release复现补充](https://github.com/nineanswerer/octo/releases/download/v0.5.6/REPRODUCING_0.5.6.md)说明协议配置、媒体和历史范围。默认分支已移出内含旧截图的历史ZIP；旧报告只表示当时结果。本次资料补充不改固定标签及封存包。
 
 [首页](README.md) · [安装](docs/RUNNING.md) · [隐私](PRIVACY.md) · [交付状态](SUBMISSION_NOTES.md)
+
+2026-10-13补充固定0.5.6的[受控原生可靠性验收](validation/LIFECYCLE_0.5.6_CONTROLLED.md)：42项生命周期与6项实际保存失败断言通过。执行原函数、合成服务响应、真实30/45秒计时器与隔离文件；零真实邮箱/模型调用。与真实五封及RC6兼容证据分开，未改变版本或标签；断言数量不是准确率。

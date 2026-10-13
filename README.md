@@ -28,3 +28,5 @@
 仅验证Windows。网易126原版RC2的IMAP客户端缺ID，读箱被拒；本次用户开启POP3 TLS后验收，没有修复官方宿主。独立card-host没有mail/model服务。最近5封之外可能遗漏；事项/去重各100条、历史20条上限；相对期限保留原文，AI仍可能误判。
 
 旧版本媒体及两个内含早期截图的0.5.3/0.5.4 ZIP已从当前默认分支移出；固定标签和早期验证报告保留历史，不能替代本轮主媒体、安装包或验收。Apache-2.0，作者nineanswerer，队伍南下。[反馈](https://github.com/nineanswerer/octo/issues) · [本队初赛82/100评语](https://github.com/OctoSense-org/OctoSense-App-Hub/issues/74)
+
+2026-10-13补充固定0.5.6的[受控原生可靠性验收](validation/LIFECYCLE_0.5.6_CONTROLLED.md)：42项生命周期与6项实际保存失败断言通过。执行原函数、合成服务响应、真实30/45秒计时器与隔离文件；零真实邮箱/模型调用。与真实五封及RC6兼容证据分开，未改变版本或标签；断言数量不是准确率。
